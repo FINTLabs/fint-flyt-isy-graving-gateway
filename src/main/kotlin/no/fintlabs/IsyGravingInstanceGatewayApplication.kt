@@ -1,4 +1,4 @@
-package no.fintlabs.isy_graving_instance_gateway
+package no.fintlabs
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
