@@ -9,26 +9,28 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RestController("api/isygraving/instances")
+@RestController
+@RequestMapping("/api/isygraving/instances")
 class IsyGravingController {
 
-    @GetMapping("{instanceId}/status}")
+    @GetMapping("/{instanceId}/status")
     fun getStatus(
         @PathVariable("instanceId") instanceId: String,
     ) : Saksstatus {
         return Saksstatus(instanceId)
     }
 
-    @PostMapping("sak")
+    @PostMapping("/sak")
     fun sak(
         @RequestBody request: Saksmappe
     ) : ResponseEntity<Void> {
         return ResponseEntity.accepted().body(null)
     }
 
-    @PostMapping("journalpost")
+    @PostMapping("/journalpost")
     fun journalpost(
         @RequestBody request: Journalpost
     ) : ResponseEntity<Journalenhet> {
