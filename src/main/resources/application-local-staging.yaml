@@ -7,7 +7,7 @@ fint:
         api:
           external:
             enabled: true
-            authorized-client-ids: 6
+            authorized-client-ids: 7
     instance-gateway:
       check-integration-exists: false
   kafka:
@@ -16,7 +16,7 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
 server:
-  port: 8106
+  port: 8107
 logging:
   level:
-    no.fintlabs.instance.gateway.InstanceController: DEBUG
+    no.fintlabs.instance.gateway.IsyGravingController: DEBUG

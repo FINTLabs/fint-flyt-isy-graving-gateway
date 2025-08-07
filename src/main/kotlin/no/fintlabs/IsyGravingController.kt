@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/isygraving/instances")
+@RequestMapping("api/isygraving/instances")
 class IsyGravingController {
 
-    @GetMapping("/{instanceId}/status")
+    @GetMapping("/sak/{instanceId}/status")
     fun getStatus(
         @PathVariable("instanceId") instanceId: String,
     ) : Saksstatus {
