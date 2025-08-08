@@ -1,16 +1,18 @@
 package no.fintlabs.model
 
 data class Saksmappe(
-    val saksdato: String,
-    val tittel: String,
-    val offentligTittel: String,
-    val skjermetTittel: Boolean,
-    val referanseArkivdel: KodeverdiGyldig,
-    val journalenhet: Journalenhet,
+    val sysId: String,
+    val administrativEnhet: String,
     val kassasjonsdato: String,
-    val administrativEnhet: String?,
+    val offentligTittel: String,
     val saksansvarligInit: String,
+    val saksdato: String,
+    val skjermetTittel: String,
     val tilgangsgruppeNavn: String,
+    val tittel: String,
+
+    val journalenhet: Journalenhet,
     val klasse: List<Klasse>,
+    val referanseArkivdel: ReferanseArkivdel,
     val referanseEksternNoekkel: ReferanseEksternNoekkel
 )
