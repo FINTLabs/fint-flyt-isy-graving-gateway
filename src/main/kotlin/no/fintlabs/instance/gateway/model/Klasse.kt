@@ -1,4 +1,4 @@
-package no.fintlabs.model
+package no.fintlabs.instance.gateway.model
 
 data class Klasse(
     val rekkefoelge: Int,
