@@ -1,52 +1,54 @@
 package no.fintlabs.instance.gateway.mapping
 
+import no.fintlabs.gateway.webinstance.model.File
 import no.fintlabs.gateway.webinstance.model.instance.InstanceObject
+import no.fintlabs.instance.gateway.model.Journalenhet
 import no.fintlabs.instance.gateway.model.Klasse
+import no.fintlabs.instance.gateway.model.Klassifikasjonssystem
+import no.fintlabs.instance.gateway.model.ReferanseArkivdel
+import no.fintlabs.instance.gateway.model.ReferanseEksternNoekkel
 import no.fintlabs.instance.gateway.model.Saksmappe
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import java.util.UUID
-import no.fintlabs.gateway.webinstance.model.File
-import no.fintlabs.instance.gateway.model.Journalenhet
-import no.fintlabs.instance.gateway.model.Klassifikasjonssystem
-import no.fintlabs.instance.gateway.model.ReferanseArkivdel
-import no.fintlabs.instance.gateway.model.ReferanseEksternNoekkel
 
 class SaksmappeInstantMappingServiceTest {
-
     private val service = SaksmappeInstantMappingService()
 
     @Test
     fun `map should populate valuePerKey and klasser collection`() {
-        val saksmappe = sampleSaksmappe(
-            klasser = listOf(
-                klasse(
-                    rekkefoelge = 1,
-                    klasseID = "A1",
-                    skjermet = false,
-                    tittel = "Klasse A",
-                    ledetekst = "Ledetekst A",
-                    klassifikasjonssystemKodebeskrivelse = "Klasse A"
-                ),
-                klasse(
-                    rekkefoelge = 2,
-                    klasseID = "B2",
-                    skjermet = true,
-                    tittel = "Klasse B",
-                    ledetekst = "Ledetekst B",
-                    klassifikasjonssystemKodebeskrivelse = "Klasse B"
-                )
+        val saksmappe =
+            sampleSaksmappe(
+                klasser =
+                    listOf(
+                        klasse(
+                            rekkefoelge = 1,
+                            klasseID = "A1",
+                            skjermet = false,
+                            tittel = "Klasse A",
+                            ledetekst = "Ledetekst A",
+                            klassifikasjonssystemKodebeskrivelse = "Klasse A",
+                        ),
+                        klasse(
+                            rekkefoelge = 2,
+                            klasseID = "B2",
+                            skjermet = true,
+                            tittel = "Klasse B",
+                            ledetekst = "Ledetekst B",
+                            klassifikasjonssystemKodebeskrivelse = "Klasse B",
+                        ),
+                    ),
             )
-        )
 
         val persistFile: (File) -> UUID = { _ -> UUID.randomUUID() }
 
-        val instanceObject: InstanceObject = service.map(
-            sourceApplicationId = 7L,
-            incomingInstance = saksmappe,
-            persistFile = persistFile
-        )
+        val instanceObject: InstanceObject =
+            service.map(
+                sourceApplicationId = 7L,
+                incomingInstance = saksmappe,
+                persistFile = persistFile,
+            )
 
         with(instanceObject.valuePerKey) {
             assertEquals("SYS-123", this["sysId"])
@@ -71,7 +73,6 @@ class SaksmappeInstantMappingServiceTest {
         }
 
         with(instanceObject.objectCollectionPerKey) {
-
             assertNotNull(this["klasser"], "Expected 'klasser' object collection to exist")
             val klasser = this["klasser"]!!.toList()
             assertEquals(2, klasser.size)
@@ -107,20 +108,23 @@ class SaksmappeInstantMappingServiceTest {
             kassasjonsdato = "2026-01-01",
             saksansvarligInit = "AB",
             tilgangsgruppeNavn = "Tilgangsgruppe X",
-            journalenhet = Journalenhet(
-                kodeverdi = "JE1",
-                kodebeskrivelse = "Journalenhet 1",
-                erGyldig = true
-            ),
-            referanseArkivdel = ReferanseArkivdel(
-                kodeverdi = "ARK-01",
-                erGyldig = false
-            ),
-            referanseEksternNoekkel = ReferanseEksternNoekkel(
-                noekkel = "ext-123",
-                fagsystem = "Fagsystem"
-            ),
-            klasse = klasser
+            journalenhet =
+                Journalenhet(
+                    kodeverdi = "JE1",
+                    kodebeskrivelse = "Journalenhet 1",
+                    erGyldig = true,
+                ),
+            referanseArkivdel =
+                ReferanseArkivdel(
+                    kodeverdi = "ARK-01",
+                    erGyldig = false,
+                ),
+            referanseEksternNoekkel =
+                ReferanseEksternNoekkel(
+                    noekkel = "ext-123",
+                    fagsystem = "Fagsystem",
+                ),
+            klasse = klasser,
         )
     }
 
@@ -130,7 +134,7 @@ class SaksmappeInstantMappingServiceTest {
         skjermet: Boolean,
         tittel: String,
         ledetekst: String,
-        klassifikasjonssystemKodebeskrivelse: String
+        klassifikasjonssystemKodebeskrivelse: String,
     ): Klasse {
         return Klasse(
             rekkefoelge = rekkefoelge,
@@ -138,11 +142,12 @@ class SaksmappeInstantMappingServiceTest {
             skjermetKlasse = skjermet,
             tittel = tittel,
             ledetekst = ledetekst,
-            klassifikasjonssystem = Klassifikasjonssystem(
-                kodebeskrivelse = klassifikasjonssystemKodebeskrivelse,
-                kodeverdi = "", // TODO
-                erGyldig = true
-            )
+            klassifikasjonssystem =
+                Klassifikasjonssystem(
+                    kodebeskrivelse = klassifikasjonssystemKodebeskrivelse,
+                    kodeverdi = "", // TODO
+                    erGyldig = true,
+                ),
         )
     }
 }

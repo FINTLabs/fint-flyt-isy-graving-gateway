@@ -6,5 +6,5 @@ data class Klasse(
     val klasseID: String,
     val skjermetKlasse: Boolean,
     val ledetekst: String,
-    val tittel: String
+    val tittel: String,
 )

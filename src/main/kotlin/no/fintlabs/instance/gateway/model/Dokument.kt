@@ -6,6 +6,5 @@ data class Dokument(
     val dokumentstatus: KodeverdiGyldig,
     val variantformat: KodeverdiGyldig,
     val referanseJournalpostSystemID: Long,
-    val fil: Filinnhold
+    val fil: Filinnhold,
 )
-

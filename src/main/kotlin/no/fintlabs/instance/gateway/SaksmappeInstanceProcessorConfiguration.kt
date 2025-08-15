@@ -9,11 +9,10 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class SaksmappeInstanceProcessorConfiguration {
-
     @Bean(name = ["saksmappeInstanceProcessor"])
     fun saksmappeInstanceProcessor(
         instanceProcessorFactoryService: InstanceProcessorFactoryService,
-        saksmappeInstanceMappingService: SaksmappeInstantMappingService
+        saksmappeInstanceMappingService: SaksmappeInstantMappingService,
     ): InstanceProcessor<Saksmappe> {
         val idFunction: (Saksmappe) -> java.util.Optional<String> = { s: Saksmappe ->
             java.util.Optional.ofNullable(s.sysId)
@@ -22,7 +21,7 @@ class SaksmappeInstanceProcessorConfiguration {
         return instanceProcessorFactoryService.createInstanceProcessor(
             "saksmappe",
             idFunction,
-            saksmappeInstanceMappingService
+            saksmappeInstanceMappingService,
         )
     }
 }

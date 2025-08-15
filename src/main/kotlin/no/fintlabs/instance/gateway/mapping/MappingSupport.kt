@@ -8,6 +8,9 @@ internal typealias PersistFile = Function<WebFile, UUID>
 
 internal operator fun <T, R> Function<T, R>.invoke(t: T): R = apply(t)
 
-internal fun MutableMap<String, String>.putOrEmpty(key: String, value: Any?) {
+internal fun MutableMap<String, String>.putOrEmpty(
+    key: String,
+    value: Any?,
+) {
     put(key, value?.toString() ?: "")
 }

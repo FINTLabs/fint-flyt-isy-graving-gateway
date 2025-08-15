@@ -22,9 +22,8 @@ class IsyGravingController(
     @param:Qualifier("saksmappeInstanceProcessor")
     private val saksmappeInstanceProcessor: InstanceProcessor<Saksmappe>,
     @param:Qualifier("journalpostInstanceProcessor")
-    private val journalpostInstanceProcessor: InstanceProcessor<Journalpost>
+    private val journalpostInstanceProcessor: InstanceProcessor<Journalpost>,
 ) {
-
     @GetMapping("/sak/{instanceId}/status")
     fun getStatus(
         @PathVariable("instanceId") instanceId: String,
@@ -35,7 +34,7 @@ class IsyGravingController(
     @PostMapping("/sak")
     fun sak(
         @RequestBody saksmappe: Saksmappe,
-        @AuthenticationPrincipal authentication: Authentication
+        @AuthenticationPrincipal authentication: Authentication,
     ): ResponseEntity<Void> {
         return saksmappeInstanceProcessor.processInstance(authentication, saksmappe)
     }
@@ -43,18 +42,17 @@ class IsyGravingController(
     @PostMapping("/journalpost")
     fun journalpost(
         @RequestBody journalpost: Journalpost,
-        @AuthenticationPrincipal authentication: Authentication
+        @AuthenticationPrincipal authentication: Authentication,
     ): Journalenhet {
-        journalpostInstanceProcessor.processInstance(authentication, journalpost)
+        journalpostInstanceProcessor
+            .processInstance(authentication, journalpost)
             .also {
                 // TODO
                 return Journalenhet(
                     kodeverdi = "",
                     kodebeskrivelse = "",
-                    erGyldig = true
+                    erGyldig = true,
                 )
             }
     }
-
-
 }

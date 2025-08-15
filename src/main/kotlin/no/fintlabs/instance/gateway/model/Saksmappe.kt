@@ -10,9 +10,8 @@ data class Saksmappe(
     val skjermetTittel: String,
     val tilgangsgruppeNavn: String,
     val tittel: String,
-
     val journalenhet: Journalenhet,
     val klasse: List<Klasse>,
     val referanseArkivdel: ReferanseArkivdel,
-    val referanseEksternNoekkel: ReferanseEksternNoekkel
+    val referanseEksternNoekkel: ReferanseEksternNoekkel,
 )

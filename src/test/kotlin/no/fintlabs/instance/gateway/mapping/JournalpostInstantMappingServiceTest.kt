@@ -1,6 +1,5 @@
 package no.fintlabs.instance.gateway.mapping
 
-import java.util.UUID
 import no.fintlabs.gateway.webinstance.model.File
 import no.fintlabs.instance.gateway.model.Avskrivning
 import no.fintlabs.instance.gateway.model.Dokument
@@ -17,9 +16,9 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
+import java.util.UUID
 
 class JournalpostInstantMappingServiceTest {
-
     private val service = JournalpostInstantMappingService()
 
     @Test
@@ -31,24 +30,27 @@ class JournalpostInstantMappingServiceTest {
             fixedUuid
         }
 
-        val journalpost = sampleJournalpost(
-            dokumenter = listOf(
-                dokument(
-                    filnavn = "vedlegg-1.pdf",
-                    base64 = "fake-pdf".toByteArray(),
-                ),
-                dokument(
-                    filnavn = "bilde-1.png",
-                    base64 = "fake-png".toByteArray(),
-                )
+        val journalpost =
+            sampleJournalpost(
+                dokumenter =
+                    listOf(
+                        dokument(
+                            filnavn = "vedlegg-1.pdf",
+                            base64 = "fake-pdf".toByteArray(),
+                        ),
+                        dokument(
+                            filnavn = "bilde-1.png",
+                            base64 = "fake-png".toByteArray(),
+                        ),
+                    ),
             )
-        )
 
-        val instanceObject = service.map(
-            sourceApplicationId = 7L,
-            incomingInstance = journalpost,
-            persistFile = persistFile
-        )
+        val instanceObject =
+            service.map(
+                sourceApplicationId = 7L,
+                incomingInstance = journalpost,
+                persistFile = persistFile,
+            )
 
         with(instanceObject.valuePerKey) {
             assertEquals(journalpost.journaldato, this["journalDato"])
@@ -89,37 +91,42 @@ class JournalpostInstantMappingServiceTest {
     @Test
     fun `map should throw for unknown media type`() {
         val persistFile: (File) -> UUID = { _ -> UUID.randomUUID() }
-        val journalpost = sampleJournalpost(
-            dokumenter = listOf(
-                dokument(filnavn = "unknown.foobar", base64 = "fake".toByteArray()),
+        val journalpost =
+            sampleJournalpost(
+                dokumenter =
+                    listOf(
+                        dokument(filnavn = "unknown.foobar", base64 = "fake".toByteArray()),
+                    ),
             )
-        )
 
-        val exception = assertThrows(IllegalArgumentException::class.java) {
-            service.map(1L, journalpost, persistFile)
-        }
+        val exception =
+            assertThrows(IllegalArgumentException::class.java) {
+                service.map(1L, journalpost, persistFile)
+            }
 
         assertThat(exception.message).contains("No media type found for fileName=unknown.foobar")
     }
 
-    private fun dokument(filnavn: String, base64: ByteArray): Dokument {
+    private fun dokument(
+        filnavn: String,
+        base64: ByteArray,
+    ): Dokument {
         return Dokument(
-            fil = Filinnhold(
-                filnavn = filnavn,
-                base64 = base64,
-                mimeType = MediaType.APPLICATION_PDF_VALUE
-            ),
+            fil =
+                Filinnhold(
+                    filnavn = filnavn,
+                    base64 = base64,
+                    mimeType = MediaType.APPLICATION_PDF_VALUE,
+                ),
             tilknyttetRegistreringSom = KodeverdiGyldig("", true),
             tittel = filnavn,
             dokumentstatus = KodeverdiGyldig("", true),
             variantformat = KodeverdiGyldig("", true),
-            referanseJournalpostSystemID = 42L
+            referanseJournalpostSystemID = 42L,
         )
     }
 
-    private fun sampleJournalpost(
-        dokumenter: List<Dokument>
-    ): Journalpost {
+    private fun sampleJournalpost(dokumenter: List<Dokument>): Journalpost {
         return Journalpost(
             journaldato = "2025-08-14",
             journalposttype = KodeverdiGyldig("", true), // TODO
@@ -129,28 +136,32 @@ class JournalpostInstantMappingServiceTest {
             skjermetTittel = false,
             forfallsdato = "2025-08-20",
             saksnr = Saksnr(saksaar = 2025, sakssekvensnummer = 123),
-            referanseEksternNoekkel = ReferanseEksternNoekkel(
-                noekkel = UUID.randomUUID().toString(),
-                fagsystem = "Fagsystem"
-            ),
-            korrespondansepart = listOf(
-                Korrespondansepart(
-                    korrespondanseparttype = KodeverdiGyldig("", true), // TODO
-                    skjermetKorrespondansepart = false,
-                    fristBesvarelse = "",
-                    kontakt = Kontakt(
-                        navn = "Navn AS",
-                        organisasjonsnummer = "123456789"
-                    )
-                )
-            ),
-            referanseAvskrivninger = listOf(
-                Avskrivning(
-                    avskrivningsdato = "2025-08-21",
-                    avskrivningsmaate = KodeverdiGyldig("", true) // TODO
-                )
-            ),
-            dokumenter = dokumenter
+            referanseEksternNoekkel =
+                ReferanseEksternNoekkel(
+                    noekkel = UUID.randomUUID().toString(),
+                    fagsystem = "Fagsystem",
+                ),
+            korrespondansepart =
+                listOf(
+                    Korrespondansepart(
+                        korrespondanseparttype = KodeverdiGyldig("", true), // TODO
+                        skjermetKorrespondansepart = false,
+                        fristBesvarelse = "",
+                        kontakt =
+                            Kontakt(
+                                navn = "Navn AS",
+                                organisasjonsnummer = "123456789",
+                            ),
+                    ),
+                ),
+            referanseAvskrivninger =
+                listOf(
+                    Avskrivning(
+                        avskrivningsdato = "2025-08-21",
+                        avskrivningsmaate = KodeverdiGyldig("", true), // TODO
+                    ),
+                ),
+            dokumenter = dokumenter,
         )
     }
 }

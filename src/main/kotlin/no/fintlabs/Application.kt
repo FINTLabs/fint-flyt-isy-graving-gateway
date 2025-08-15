@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class IsyGravingInstanceGatewayApplication
 
 fun main(args: Array<String>) {
-	runApplication<IsyGravingInstanceGatewayApplication>(*args)
+    runApplication<IsyGravingInstanceGatewayApplication>(*args)
 }

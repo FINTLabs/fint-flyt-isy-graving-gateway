@@ -5,6 +5,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("jvm") version "2.1.10"
     kotlin("plugin.spring") version "2.1.10"
+    id("org.jlleitschuh.gradle.ktlint") version "13.0.0"
 }
 
 group = "no.fintlabs"
@@ -25,8 +26,8 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter")
-	implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
@@ -37,8 +38,8 @@ dependencies {
     implementation("no.fintlabs:fint-flyt-web-resource-server:unspecified")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.withType<KotlinCompile>().configureEach {
@@ -48,5 +49,18 @@ tasks.withType<KotlinCompile>().configureEach {
 }
 
 tasks.withType<Test> {
-	useJUnitPlatform()
+    useJUnitPlatform()
+}
+
+ktlint {
+    version.set("1.7.1")
+    ignoreFailures.set(false)
+    outputToConsole.set(true)
+    filter {
+        exclude("**/generated/**")
+    }
+}
+
+tasks.named("check") {
+    dependsOn("ktlintCheck")
 }

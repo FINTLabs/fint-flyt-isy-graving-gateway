@@ -12,5 +12,5 @@ data class Journalpost(
     val korrespondansepart: List<Korrespondansepart>,
     val referanseEksternNoekkel: ReferanseEksternNoekkel,
     val referanseAvskrivninger: List<Avskrivning>,
-    val dokumenter: List<Dokument>
+    val dokumenter: List<Dokument>,
 )
