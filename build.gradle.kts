@@ -35,7 +35,7 @@ dependencies {
     implementation("no.fintlabs:fint-kafka:4.0.1")
     implementation("no.fintlabs:fint-flyt-kafka:3.1.1")
     implementation("no.fintlabs:fint-flyt-web-instance-gateway:0-SNAPSHOT")
-    implementation("no.fintlabs:fint-flyt-web-resource-server:unspecified")
+    implementation("no.fintlabs:fint-flyt-web-resource-server:1.0.0-rc-2")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
