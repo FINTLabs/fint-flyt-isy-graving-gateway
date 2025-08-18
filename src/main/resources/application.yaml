@@ -1,5 +1,5 @@
 fint:
-  application-id: fint-flyt-isy-graving-instance-gateway
+  application-id: fint-flyt-isy-graving-gateway
   cache:
     defaultCacheEntryTimeToLiveMillis: 518400000
     defaultCacheHeapSize: 1000000

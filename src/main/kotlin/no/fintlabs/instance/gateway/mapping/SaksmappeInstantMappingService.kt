@@ -45,8 +45,8 @@ class SaksmappeInstantMappingService : InstanceMapper<Saksmappe> {
             InstanceObject(valuePerKey, objectCollectionPerKey)
         }
 
-    private fun toInstanceObject(klasse: Klasse): InstanceObject {
-        return InstanceObject(
+    private fun toInstanceObject(klasse: Klasse): InstanceObject =
+        InstanceObject(
             valuePerKey =
                 buildMap {
                     putOrEmpty("rekkefoelge", klasse.rekkefoelge)
@@ -57,5 +57,4 @@ class SaksmappeInstantMappingService : InstanceMapper<Saksmappe> {
                     putOrEmpty("klassifikasjonssystemKodebeskrivelse", klasse.klassifikasjonssystem.kodebeskrivelse)
                 },
         )
-    }
 }

@@ -5,6 +5,7 @@ import no.fintlabs.instance.gateway.model.Journalenhet
 import no.fintlabs.instance.gateway.model.Journalpost
 import no.fintlabs.instance.gateway.model.Saksmappe
 import no.fintlabs.instance.gateway.model.Saksstatus
+import no.fintlabs.webresourceserver.UrlPaths.EXTERNAL_API
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("api/isygraving/instances")
+@RequestMapping(EXTERNAL_API + "isygraving/instances")
 class IsyGravingController(
     @param:Qualifier("saksmappeInstanceProcessor")
     private val saksmappeInstanceProcessor: InstanceProcessor<Saksmappe>,
@@ -27,17 +28,13 @@ class IsyGravingController(
     @GetMapping("/sak/{instanceId}/status")
     fun getStatus(
         @PathVariable("instanceId") instanceId: String,
-    ): Saksstatus {
-        return Saksstatus(instanceId)
-    }
+    ): Saksstatus = Saksstatus(instanceId)
 
     @PostMapping("/sak")
     fun sak(
         @RequestBody saksmappe: Saksmappe,
         @AuthenticationPrincipal authentication: Authentication,
-    ): ResponseEntity<Void> {
-        return saksmappeInstanceProcessor.processInstance(authentication, saksmappe)
-    }
+    ): ResponseEntity<Void> = saksmappeInstanceProcessor.processInstance(authentication, saksmappe)
 
     @PostMapping("/journalpost")
     fun journalpost(
