@@ -20,7 +20,7 @@ class JournalpostInstantMappingService : InstanceMapper<Journalpost> {
     override fun map(
         sourceApplicationId: Long,
         incomingInstance: Journalpost,
-        persistFile: PersistFile,
+        persistFile: (File) -> UUID,
     ): InstanceObject {
         return with(incomingInstance) {
             val dokumenterInstanceObjects =
@@ -85,7 +85,7 @@ class JournalpostInstantMappingService : InstanceMapper<Journalpost> {
     }
 
     private fun mapAttachmentDocumentsToInstanceObjects(
-        persistFile: PersistFile,
+        persistFile: (File) -> UUID,
         sourceApplicationId: Long,
         sourceApplicationInstanceId: String,
         dokumenter: List<Dokument>,
@@ -125,7 +125,7 @@ class JournalpostInstantMappingService : InstanceMapper<Journalpost> {
     }
 
     private fun mapAttachmentDocumentToInstanceObject(
-        persistFile: PersistFile,
+        persistFile: (File) -> UUID,
         sourceApplicationId: Long,
         sourceApplicationInstanceId: String,
         dokument: Dokument,

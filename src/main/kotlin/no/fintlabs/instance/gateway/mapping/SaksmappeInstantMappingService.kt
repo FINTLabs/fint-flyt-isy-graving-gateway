@@ -1,17 +1,19 @@
 package no.fintlabs.instance.gateway.mapping
 
 import no.fintlabs.gateway.webinstance.InstanceMapper
+import no.fintlabs.gateway.webinstance.model.File
 import no.fintlabs.gateway.webinstance.model.instance.InstanceObject
 import no.fintlabs.instance.gateway.model.Klasse
 import no.fintlabs.instance.gateway.model.Saksmappe
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 @Service
 class SaksmappeInstantMappingService : InstanceMapper<Saksmappe> {
     override fun map(
         sourceApplicationId: Long,
         incomingInstance: Saksmappe,
-        @Suppress("UNUSED_PARAMETER") persistFile: PersistFile,
+        @Suppress("UNUSED_PARAMETER") persistFile: (File) -> UUID,
     ): InstanceObject =
         with(incomingInstance) {
             val valuePerKey: Map<String, String> =
@@ -45,8 +47,8 @@ class SaksmappeInstantMappingService : InstanceMapper<Saksmappe> {
             InstanceObject(valuePerKey, objectCollectionPerKey)
         }
 
-    private fun toInstanceObject(klasse: Klasse): InstanceObject =
-        InstanceObject(
+    private fun toInstanceObject(klasse: Klasse): InstanceObject {
+        return InstanceObject(
             valuePerKey =
                 buildMap {
                     putOrEmpty("rekkefoelge", klasse.rekkefoelge)
@@ -57,4 +59,5 @@ class SaksmappeInstantMappingService : InstanceMapper<Saksmappe> {
                     putOrEmpty("klassifikasjonssystemKodebeskrivelse", klasse.klassifikasjonssystem.kodebeskrivelse)
                 },
         )
+    }
 }
