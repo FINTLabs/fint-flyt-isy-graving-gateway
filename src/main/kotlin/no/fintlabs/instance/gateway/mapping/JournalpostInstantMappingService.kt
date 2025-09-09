@@ -8,6 +8,7 @@ import no.fintlabs.instance.gateway.model.Avskrivning
 import no.fintlabs.instance.gateway.model.Dokument
 import no.fintlabs.instance.gateway.model.Journalpost
 import no.fintlabs.instance.gateway.model.Korrespondansepart
+import no.fintlabs.instance.gateway.model.Sak
 import org.springframework.http.MediaType
 import org.springframework.http.MediaTypeFactory
 import org.springframework.stereotype.Service
@@ -19,33 +20,21 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 class JournalpostInstantMappingService : InstanceMapper<Journalpost> {
     override fun map(
         sourceApplicationId: Long,
-        incomingInstance: Journalpost,
+        incomingInstance: Sak,
         persistFile: PersistFile,
-    ): InstanceObject {
-        return with(incomingInstance) {
+    ): InstanceObject =
+        with(incomingInstance) {
             val dokumenterInstanceObjects =
                 mapAttachmentDocumentsToInstanceObjects(
                     persistFile = persistFile,
                     sourceApplicationId = sourceApplicationId,
-                    sourceApplicationInstanceId = incomingInstance.saksnr.toId(), // FIXME: Add correct value
-                    dokumenter = dokumenter,
+                    sourceApplicationInstanceId = incomingInstance.saksId, // FIXME: Add correct value
+                    dokumenter = incomingInstance.journalposter,
                 )
 
             val valuePerKey: Map<String, String> =
                 buildMap {
-                    putOrEmpty("journalDato", journaldato)
-                    putOrEmpty("journalposttypeKodeverdi", journalposttype.kodeverdi)
-                    putOrEmpty("journalposttypeErGyldig", journalposttype.erGyldig)
-                    putOrEmpty("dokumentetsDato", dokumentetsDato)
-                    putOrEmpty("journalstatusKodeverdi", journalstatus.kodeverdi)
-                    putOrEmpty("journalstatusErGyldig", journalstatus.erGyldig)
-                    putOrEmpty("tittel", tittel)
-                    putOrEmpty("skjermetTittel", skjermetTittel)
-                    putOrEmpty("forfallsdato", forfallsdato)
-                    putOrEmpty("saksnrSaksaar", saksnr.saksaar)
-                    putOrEmpty("saksnrSakssekvensnummer", saksnr.sakssekvensnummer)
-                    putOrEmpty("referanseEksternNoekkelNoekkel", referanseEksternNoekkel.noekkel)
-                    putOrEmpty("referanseEksternNoekkelFagsystem", referanseEksternNoekkel.fagsystem)
+                    putOrEmpty("kommunenavn", incomingInstance.journalposter)
                 }
 
             val objectCollectionPerKey =
@@ -57,10 +46,9 @@ class JournalpostInstantMappingService : InstanceMapper<Journalpost> {
 
             InstanceObject(valuePerKey, objectCollectionPerKey)
         }
-    }
 
-    private fun toInstanceObject(k: Korrespondansepart): InstanceObject {
-        return InstanceObject(
+    private fun toInstanceObject(k: Korrespondansepart): InstanceObject =
+        InstanceObject(
             valuePerKey =
                 buildMap {
                     putOrEmpty("korrespondanseparttypeKodeverdi", k.korrespondanseparttype.kodeverdi)
@@ -71,10 +59,9 @@ class JournalpostInstantMappingService : InstanceMapper<Journalpost> {
                     putOrEmpty("kontaktOrganisasjonsnummer", k.kontakt.organisasjonsnummer)
                 },
         )
-    }
 
-    private fun toInstanceObject(a: Avskrivning): InstanceObject {
-        return InstanceObject(
+    private fun toInstanceObject(a: Avskrivning): InstanceObject =
+        InstanceObject(
             valuePerKey =
                 buildMap {
                     putOrEmpty("avskrivningsdato", a.avskrivningsdato)
@@ -82,15 +69,14 @@ class JournalpostInstantMappingService : InstanceMapper<Journalpost> {
                     putOrEmpty("avskrivningsmaate_er_gyldig", a.avskrivningsmaate.erGyldig)
                 },
         )
-    }
 
     private fun mapAttachmentDocumentsToInstanceObjects(
         persistFile: PersistFile,
         sourceApplicationId: Long,
         sourceApplicationInstanceId: String,
         dokumenter: List<Dokument>,
-    ): List<InstanceObject> {
-        return dokumenter.map {
+    ): List<InstanceObject> =
+        dokumenter.map {
             mapAttachmentDocumentToInstanceObject(
                 persistFile = persistFile,
                 sourceApplicationId = sourceApplicationId,
@@ -98,7 +84,6 @@ class JournalpostInstantMappingService : InstanceMapper<Journalpost> {
                 dokument = it,
             )
         }
-    }
 
     private fun getMediaType(dokument: Dokument): MediaType {
         val mediaType = MediaTypeFactory.getMediaType(dokument.fil.filnavn)
@@ -113,8 +98,8 @@ class JournalpostInstantMappingService : InstanceMapper<Journalpost> {
         sourceApplicationInstanceId: String,
         dokument: Dokument,
         type: MediaType,
-    ): File {
-        return File(
+    ): File =
+        File(
             name = dokument.fil.filnavn,
             type = type,
             sourceApplicationId = sourceApplicationId,
@@ -122,28 +107,26 @@ class JournalpostInstantMappingService : InstanceMapper<Journalpost> {
             encoding = "UTF-8",
             base64Contents = Base64.encode(dokument.fil.base64),
         )
-    }
 
     private fun mapAttachmentDocumentToInstanceObject(
         persistFile: PersistFile,
         sourceApplicationId: Long,
         sourceApplicationInstanceId: String,
         dokument: Dokument,
-    ): InstanceObject {
-        return with(dokument) {
+    ): InstanceObject =
+        with(dokument) {
             val mediaType = getMediaType(this)
             val file = toFile(sourceApplicationId, sourceApplicationInstanceId, this, mediaType)
             val fileId = persistFile(file)
             mapAttachmentDocumentAndFileIdToInstanceObject(this, mediaType, fileId)
         }
-    }
 
     private fun mapAttachmentDocumentAndFileIdToInstanceObject(
         dokument: Dokument,
         mediaType: MediaType,
         fileId: UUID,
-    ): InstanceObject {
-        return InstanceObject(
+    ): InstanceObject =
+        InstanceObject(
             valuePerKey =
                 buildMap {
                     putOrEmpty("tittel", dokument.fil.filnavn)
@@ -152,5 +135,4 @@ class JournalpostInstantMappingService : InstanceMapper<Journalpost> {
                     putOrEmpty("fil", fileId)
                 },
         )
-    }
 }

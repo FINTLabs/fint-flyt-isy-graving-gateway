@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 import java.util.UUID
 
 class SaksmappeInstantMappingServiceTest {
-    private val service = SaksmappeInstantMappingService()
+    private val service = SakMappingService()
 
     @Test
     fun `map should populate valuePerKey and klasser collection`() {
@@ -97,8 +97,8 @@ class SaksmappeInstantMappingServiceTest {
         }
     }
 
-    private fun sampleSaksmappe(klasser: List<Klasse>): Saksmappe {
-        return Saksmappe(
+    private fun sampleSaksmappe(klasser: List<Klasse>): Saksmappe =
+        Saksmappe(
             sysId = "SYS-123",
             tittel = "Tittel på saken",
             offentligTittel = "Offentlig tittel",
@@ -126,7 +126,6 @@ class SaksmappeInstantMappingServiceTest {
                 ),
             klasse = klasser,
         )
-    }
 
     private fun klasse(
         rekkefoelge: Int,
@@ -135,8 +134,8 @@ class SaksmappeInstantMappingServiceTest {
         tittel: String,
         ledetekst: String,
         klassifikasjonssystemKodebeskrivelse: String,
-    ): Klasse {
-        return Klasse(
+    ): Klasse =
+        Klasse(
             rekkefoelge = rekkefoelge,
             klasseID = klasseID,
             skjermetKlasse = skjermet,
@@ -149,5 +148,4 @@ class SaksmappeInstantMappingServiceTest {
                     erGyldig = true,
                 ),
         )
-    }
 }
