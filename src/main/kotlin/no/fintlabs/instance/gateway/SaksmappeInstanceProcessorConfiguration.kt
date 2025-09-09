@@ -14,8 +14,8 @@ class SaksmappeInstanceProcessorConfiguration {
         instanceProcessorFactoryService: InstanceProcessorFactoryService,
         saksmappeInstanceMappingService: SakMappingService,
     ): InstanceProcessor<Saksmappe> {
-        val idFunction: (Saksmappe) -> java.util.Optional<String> = { s: Saksmappe ->
-            java.util.Optional.ofNullable(s.sysId)
+        val idFunction: (Saksmappe) -> String = { s ->
+            s.sysId
         }
 
         return instanceProcessorFactoryService.createInstanceProcessor(

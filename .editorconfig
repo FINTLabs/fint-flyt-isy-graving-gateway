@@ -21,4 +21,5 @@ max_line_length = 120
 ktlint_functional_experimental_trailing-comma-on-call-site = enabled
 
 # Do not use function expression body
-ktlint_standard_function-expression-body = enabled
+ktlint_standard_function-expression-body = disabled
+

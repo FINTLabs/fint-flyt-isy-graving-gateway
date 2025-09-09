@@ -7,7 +7,6 @@ import no.fintlabs.instance.gateway.mapping.JournalpostInstantMappingService
 import no.fintlabs.instance.gateway.model.Journalpost
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import java.util.Optional
 
 @Configuration
 class JournalpostInstanceProcessorConfiguration {
@@ -16,8 +15,8 @@ class JournalpostInstanceProcessorConfiguration {
         instanceProcessorFactoryService: InstanceProcessorFactoryService,
         journalpostInstanceMappingService: JournalpostInstantMappingService,
     ): InstanceProcessor<Journalpost> {
-        val idFunction: (Journalpost) -> Optional<String> = { j: Journalpost ->
-            Optional.ofNullable(j.saksnr.toId())
+        val idFunction: (Journalpost) -> String = { j ->
+            j.saksnr.toId()
         }
 
         return instanceProcessorFactoryService.createInstanceProcessor(
