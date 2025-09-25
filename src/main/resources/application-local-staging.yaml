@@ -1,0 +1,22 @@
+fint:
+  org-id: fintlabs.no
+  flyt:
+    file-service-url: http://localhost:8091
+    webresourceserver:
+      security:
+        api:
+          external:
+            enabled: true
+            authorized-client-ids: 7
+    webinstance-gateway:
+      check-integration-exists: false
+  kafka:
+    default-replicas: 1
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+server:
+  port: 8107
+logging:
+  level:
+    no.fintlabs.instance.gateway.IsyGravingController: DEBUG
