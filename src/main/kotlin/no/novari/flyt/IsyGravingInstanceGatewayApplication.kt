@@ -1,4 +1,4 @@
-package no.fintlabs.isy_graving_instance_gateway
+package no.novari.flyt
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class IsyGravingInstanceGatewayApplication
 
 fun main(args: Array<String>) {
-	runApplication<IsyGravingInstanceGatewayApplication>(*args)
+    runApplication<IsyGravingInstanceGatewayApplication>(*args)
 }
