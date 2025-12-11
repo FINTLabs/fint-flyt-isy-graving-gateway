@@ -3,9 +3,9 @@ package no.novari.flyt
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
-@SpringBootApplication
-class IsyGravingInstanceGatewayApplication
+@SpringBootApplication(scanBasePackages = ["no.novari"])
+class Application
 
 fun main(args: Array<String>) {
-    runApplication<IsyGravingInstanceGatewayApplication>(*args)
+    runApplication<Application>(*args)
 }
