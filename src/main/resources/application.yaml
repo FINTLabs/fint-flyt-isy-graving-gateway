@@ -1,5 +1,5 @@
 fint:
-  application-id: flyt-isy-graving-gateway
+  application-id: fint-flyt-isy-graving-gateway
 
 logging:
   level:
