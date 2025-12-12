@@ -7,7 +7,7 @@ resources:
 
 labels:
   - pairs:
-      app.kubernetes.io/instance: flyt-isygraving-vestfoldfylke_no
+      app.kubernetes.io/instance: flyt-isygraving-gateway_vestfoldfylke_no
       fintlabs.no/org-id: vestfoldfylke.no
 
 patches:
@@ -26,6 +26,18 @@ patches:
         value:
           name: novari.kafka.topic.org-id
           value: "vestfoldfylke-no"
+      - op: replace
+        path: "/spec/probes/startup/path"
+        value: "/vestfoldfylke-no/actuator/health"
+      - op: replace
+        path: "/spec/probes/readiness/path"
+        value: "/vestfoldfylke-no/actuator/health"
+      - op: replace
+        path: "/spec/probes/liveness/path"
+        value: "/vestfoldfylke-no/actuator/health"
+      - op: replace
+        path: "/spec/observability/metrics/path"
+        value: "/vestfoldfylke-no/actuator/prometheus"
     target:
       kind: Application
       name: flyt-isygraving-gateway

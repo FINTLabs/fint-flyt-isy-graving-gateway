@@ -40,6 +40,11 @@ spec:
     requests:
       memory: "512Mi"
       cpu: "100m"
+  observability:
+    metrics:
+      enabled: true
+      port: "8080"
+      path: /actuator/prometheus
   probes:
     startup:
       path: /actuator/health
