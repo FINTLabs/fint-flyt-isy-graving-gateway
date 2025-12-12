@@ -1,43 +1,43 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: ofk-no
+namespace: ${NAMESPACE}
 
 resources:
   - ../../../base
 
 labels:
   - pairs:
-      app.kubernetes.io/instance: flyt-isygraving-gateway_ofk_no
-      fintlabs.no/org-id: ofk.no
+      app.kubernetes.io/instance: ${APP_INSTANCE}
+      fintlabs.no/org-id: ${ORG_DOT}
 
 patches:
   - patch: |-
       - op: replace
         path: "/spec/kafka/acls/0/topic"
-        value: "ofk-no.flyt.*"
+        value: "${ORG_SLUG}.flyt.*"
       - op: replace
         path: "/spec/orgId"
-        value: "/beta/ofk.no"
+        value: "/${ORGID_PATH}"
       - op: replace
         path: "/spec/ingress/basePath"
-        value: "/beta/ofk-no/api/isygraving"
+        value: "/${PATH_PREFIX}/api/isygraving"
       - op: add
         path: "/spec/env/-"
         value:
           name: novari.kafka.topic.org-id
-          value: "ofk-no"
+          value: "${ORG_SLUG}"
       - op: replace
         path: "/spec/probes/startup/path"
-        value: "/beta/ofk-no/actuator/health"
+        value: "/${PATH_PREFIX}/actuator/health"
       - op: replace
         path: "/spec/probes/readiness/path"
-        value: "/beta/ofk-no/actuator/health"
+        value: "/${PATH_PREFIX}/actuator/health"
       - op: replace
         path: "/spec/probes/liveness/path"
-        value: "/beta/ofk-no/actuator/health"
+        value: "/${PATH_PREFIX}/actuator/health"
       - op: replace
         path: "/spec/observability/metrics/path"
-        value: "/beta/ofk-no/actuator/prometheus"
+        value: "/${PATH_PREFIX}/actuator/prometheus"
     target:
       kind: Application
       name: flyt-isygraving-gateway
