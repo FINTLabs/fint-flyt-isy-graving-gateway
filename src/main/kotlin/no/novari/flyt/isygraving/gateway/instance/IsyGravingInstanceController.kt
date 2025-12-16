@@ -7,7 +7,6 @@ import no.novari.flyt.isygraving.gateway.instance.model.JournalPostInstance
 import no.novari.flyt.webresourceserver.UrlPaths.EXTERNAL_API
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -22,12 +21,12 @@ class IsyGravingInstanceController(
     @PostMapping("case")
     fun postCase(
         @Valid @RequestBody caseInstance: CaseInstance,
-        @AuthenticationPrincipal authentication: Authentication,
+        authentication: Authentication,
     ): ResponseEntity<Void> = caseInstanceProcessor.processInstance(authentication, caseInstance)
 
     @PostMapping("journalpost")
     fun postJournalPost(
         @Valid @RequestBody journalPostInstance: JournalPostInstance,
-        @AuthenticationPrincipal authentication: Authentication,
+        authentication: Authentication,
     ): ResponseEntity<Void> = journalPostInstanceProcessor.processInstance(authentication, journalPostInstance)
 }
