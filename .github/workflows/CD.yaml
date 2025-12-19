@@ -20,6 +20,7 @@ jobs:
       github.event.workflow_run.conclusion == 'success' &&
       github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         org:
@@ -68,23 +69,16 @@ jobs:
           creds: ${{ secrets[ format('AKS_{0}_FINT_GITHUB', steps.environment.outputs.result) ] }}
       - uses: azure/use-kubelogin@v1
         with:
-          kubelogin-version: "v0.0.32"
+          kubelogin-version: 'v0.0.32'
       - uses: azure/aks-set-context@v4
         with:
           cluster-name: ${{ matrix.cluster }}
           resource-group: ${{ steps.resource-group.outputs.result }}
           admin: true
           use-kubelogin: true
-
-      - name: Substitute image into baked YAML
-        id: substitute
-        uses: Azure/k8s-artifact-substitute@v2
-        with:
-          manifests: ${{ steps.bake.outputs.manifestsBundle }}
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.workflow_run.head_sha }}
-
-      - uses: azure/k8s-deploy@v5.0.4
+      - uses: azure/k8s-deploy@v5.0.3
         with:
           action: deploy
-          manifests: ${{ steps.substitute.outputs.manifests }}
+          manifests: ${{ steps.bake.outputs.manifestsBundle }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.workflow_run.head_sha }}
           namespace: ${{ matrix.org }}
