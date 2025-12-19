@@ -105,9 +105,15 @@ jobs:
           resource-group: ${{ steps.rg.outputs.result }}
           admin: true
           use-kubelogin: true
-      - uses: azure/k8s-deploy@v5.0.3
+      - name: Substitute image into baked YAML
+        id: substitute
+        uses: Azure/k8s-artifact-substitute@v2
         with:
-          action: deploy
           manifests: ${{ steps.bake.outputs.manifestsBundle }}
           images: ${{ steps.meta.outputs.tags }}
+
+      - uses: azure/k8s-deploy@v5.0.4
+        with:
+          action: deploy
+          manifests: ${{ steps.substitute.outputs.manifests }}
           namespace: ${{ env.ORG }}
