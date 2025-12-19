@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotEmpty
 
 data class JournalPostInstance(
     @field:NotBlank val caseId: String,
+//    @field:NotBlank val caseArchiveGuid: String,
     @field:NotBlank val archiveCaseId: String,
     @field:NotEmpty @field:Valid val journalEntries: List<JournalEntry>,
     @field:NotBlank val callback: String,
