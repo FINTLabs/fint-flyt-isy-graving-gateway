@@ -17,7 +17,10 @@ patches:
         value: "telemarkfylke-no.flyt.*"
       - op: replace
         path: "/spec/orgId"
-        value: "/telemarkfylke.no"
+        value: "telemarkfylke.no"
+      - op: replace
+        path: "/spec/url/basePath"
+        value: "/telemarkfylke-no"
       - op: replace
         path: "/spec/ingress/basePath"
         value: "/telemarkfylke-no/api/isygraving"

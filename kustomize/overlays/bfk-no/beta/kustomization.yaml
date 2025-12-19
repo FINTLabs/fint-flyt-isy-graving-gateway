@@ -17,7 +17,10 @@ patches:
         value: "bfk-no.flyt.*"
       - op: replace
         path: "/spec/orgId"
-        value: "/beta/bfk.no"
+        value: "bfk.no"
+      - op: replace
+        path: "/spec/url/basePath"
+        value: "/beta/bfk-no"
       - op: replace
         path: "/spec/ingress/basePath"
         value: "/beta/bfk-no/api/isygraving"

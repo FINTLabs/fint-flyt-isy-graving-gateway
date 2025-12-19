@@ -17,7 +17,10 @@ patches:
         value: "afk-no.flyt.*"
       - op: replace
         path: "/spec/orgId"
-        value: "/beta/afk.no"
+        value: "afk.no"
+      - op: replace
+        path: "/spec/url/basePath"
+        value: "/beta/afk-no"
       - op: replace
         path: "/spec/ingress/basePath"
         value: "/beta/afk-no/api/isygraving"
