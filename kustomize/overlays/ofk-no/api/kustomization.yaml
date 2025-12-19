@@ -7,7 +7,7 @@ resources:
 
 labels:
   - pairs:
-      app.kubernetes.io/instance: flyt-isygraving-gateway_ofk_no
+      app.kubernetes.io/instance: flyt-isy-graving-gateway_ofk_no
       fintlabs.no/org-id: ofk.no
 
 patches:
@@ -28,4 +28,4 @@ patches:
           value: "ofk-no"
     target:
       kind: Application
-      name: flyt-isygraving-gateway
+      name: flyt-isy-graving-gateway

@@ -1,11 +1,11 @@
 apiVersion: fintlabs.no/v1alpha1
 kind: Application
 metadata:
-  name: flyt-isygraving-gateway
+  name: flyt-isy-graving-gateway
   namespace: fintlabs-no
   labels:
-    app.kubernetes.io/name: flyt-isygraving-gateway
-    app.kubernetes.io/instance: flyt-isygraving-gateway_fintlabs_no
+    app.kubernetes.io/name: flyt-isy-graving-gateway
+    app.kubernetes.io/instance: flyt-isy-graving-gateway_fintlabs_no
     app.kubernetes.io/version: latest
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: fint-flyt
@@ -15,7 +15,7 @@ spec:
   port: 8080
   imagePullPolicy: Always
   orgId: fintlabs.no
-  image: ghcr.io/fintlabs/fint-flyt-isygraving-gateway:latest
+  image: ghcr.io/fintlabs/fint-flyt-isy-graving-gateway:sha-0000000
   kafka:
     enabled: true
     acls:
