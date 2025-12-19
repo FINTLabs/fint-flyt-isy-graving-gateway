@@ -17,7 +17,10 @@ patches:
         value: "ofk-no.flyt.*"
       - op: replace
         path: "/spec/orgId"
-        value: "/ofk.no"
+        value: "ofk.no"
+      - op: replace
+        path: "/spec/url/basePath"
+        value: "/ofk-no"
       - op: replace
         path: "/spec/ingress/basePath"
         value: "/ofk-no/api/isygraving"
