@@ -28,4 +28,4 @@ patches:
           value: "${ORG_SLUG}"
     target:
       kind: Application
-      name: flyt-isygraving-gateway
+      name: flyt-isy-graving-gateway

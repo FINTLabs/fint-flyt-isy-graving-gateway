@@ -52,7 +52,7 @@ for ENV_DIR in "$OVERLAYS_ROOT"/*/*; do
   fi
 
   export NAMESPACE="$ORG_SLUG"
-  export APP_INSTANCE="flyt-isygraving-gateway_${ORG_UNDERSCORE}"
+  export APP_INSTANCE="flyt-isy-graving-gateway_${ORG_UNDERSCORE}"
   export ORG_DOT
   export ORG_SLUG
   export ORGID_PATH
