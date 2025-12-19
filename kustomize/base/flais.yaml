@@ -15,7 +15,7 @@ spec:
   port: 8080
   imagePullPolicy: Always
   orgId: fintlabs.no
-  image: ghcr.io/fintlabs/fint-flyt-isy-graving-gateway:latest
+  image: ghcr.io/fintlabs/fint-flyt-isygraving-gateway:sha-0000000
   kafka:
     enabled: true
     acls:
