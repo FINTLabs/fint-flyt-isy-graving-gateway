@@ -17,10 +17,13 @@ patches:
         value: "${ORG_SLUG}.flyt.*"
       - op: replace
         path: "/spec/orgId"
-        value: "/${ORGID_PATH}"
+        value: "${ORG_DOT}"
+      - op: replace
+        path: "/spec/url/basePath"
+        value: "${URL_BASE_PATH}"
       - op: replace
         path: "/spec/ingress/basePath"
-        value: "/${PATH_PREFIX}/api/isygraving"
+        value: "${INGRESS_BASE_PATH}"
       - op: add
         path: "/spec/env/-"
         value:

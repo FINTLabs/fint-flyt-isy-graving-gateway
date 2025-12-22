@@ -20,10 +20,10 @@ patches:
         value: "telemarkfylke.no"
       - op: replace
         path: "/spec/url/basePath"
-        value: "/beta/telemarkfylke.no"
+        value: "/beta/telemarkfylke-no"
       - op: replace
         path: "/spec/ingress/basePath"
-        value: "/beta/telemarkfylke-no/api/isygraving"
+        value: "/beta/telemarkfylke-no/api/isygraving/instances"
       - op: add
         path: "/spec/env/-"
         value:
