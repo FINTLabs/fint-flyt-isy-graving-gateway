@@ -23,7 +23,7 @@ patches:
         value: "/mrfylke-no"
       - op: replace
         path: "/spec/ingress/basePath"
-        value: "/mrfylke-no/api/isygraving"
+        value: "/mrfylke-no/api/isygraving/instances"
       - op: add
         path: "/spec/env/-"
         value:

@@ -23,7 +23,7 @@ patches:
         value: "/ofk-no"
       - op: replace
         path: "/spec/ingress/basePath"
-        value: "/ofk-no/api/isygraving"
+        value: "/ofk-no/api/isygraving/instances"
       - op: add
         path: "/spec/env/-"
         value:

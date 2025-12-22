@@ -23,7 +23,7 @@ patches:
         value: "/telemarkfylke-no"
       - op: replace
         path: "/spec/ingress/basePath"
-        value: "/telemarkfylke-no/api/isygraving"
+        value: "/telemarkfylke-no/api/isygraving/instances"
       - op: add
         path: "/spec/env/-"
         value:

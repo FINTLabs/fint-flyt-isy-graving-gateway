@@ -23,7 +23,7 @@ patches:
         value: "/bfk-no"
       - op: replace
         path: "/spec/ingress/basePath"
-        value: "/bfk-no/api/isygraving"
+        value: "/bfk-no/api/isygraving/instances"
       - op: add
         path: "/spec/env/-"
         value:

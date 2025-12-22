@@ -23,7 +23,7 @@ patches:
         value: "/beta/afk-no"
       - op: replace
         path: "/spec/ingress/basePath"
-        value: "/beta/afk-no/api/isygraving"
+        value: "/beta/afk-no/api/isygraving/instances"
       - op: add
         path: "/spec/env/-"
         value:
