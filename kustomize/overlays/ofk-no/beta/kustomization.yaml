@@ -19,9 +19,6 @@ patches:
         path: "/spec/orgId"
         value: "ofk.no"
       - op: replace
-        path: "/spec/url/basePath"
-        value: "/beta/ofk-no"
-      - op: replace
         path: "/spec/ingress/basePath"
         value: "/beta/ofk-no/api/isygraving/instances"
       - op: add
@@ -29,6 +26,11 @@ patches:
         value:
           name: novari.kafka.topic.org-id
           value: "ofk-no"
+      - op: add
+        path: "/spec/env/-"
+        value:
+          name: server.servlet.context-path
+          value: "/beta/ofk-no"
     target:
       kind: Application
       name: flyt-isy-graving-gateway

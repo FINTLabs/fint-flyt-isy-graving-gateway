@@ -19,9 +19,6 @@ patches:
         path: "/spec/orgId"
         value: "${ORG_DOT}"
       - op: replace
-        path: "/spec/url/basePath"
-        value: "${URL_BASE_PATH}"
-      - op: replace
         path: "/spec/ingress/basePath"
         value: "${INGRESS_BASE_PATH}"
       - op: add
@@ -29,6 +26,11 @@ patches:
         value:
           name: novari.kafka.topic.org-id
           value: "${ORG_SLUG}"
+      - op: add
+        path: "/spec/env/-"
+        value:
+          name: server.servlet.context-path
+          value: "${SERVLET_CONTEXT_PATH}"
     target:
       kind: Application
       name: flyt-isy-graving-gateway
