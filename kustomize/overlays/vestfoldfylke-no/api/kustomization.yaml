@@ -19,9 +19,6 @@ patches:
         path: "/spec/orgId"
         value: "vestfoldfylke.no"
       - op: replace
-        path: "/spec/url/basePath"
-        value: "/vestfoldfylke-no"
-      - op: replace
         path: "/spec/ingress/basePath"
         value: "/vestfoldfylke-no/api/isygraving/instances"
       - op: add
@@ -29,6 +26,11 @@ patches:
         value:
           name: novari.kafka.topic.org-id
           value: "vestfoldfylke-no"
+      - op: add
+        path: "/spec/env/-"
+        value:
+          name: server.servlet.context-path
+          value: "/vestfoldfylke-no"
     target:
       kind: Application
       name: flyt-isy-graving-gateway

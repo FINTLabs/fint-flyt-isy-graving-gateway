@@ -44,10 +44,10 @@ for ENV_DIR in "$OVERLAYS_ROOT"/*/*; do
   ORG_UNDERSCORE=${ORG_SLUG//-/_}
 
   if [ "$ENVIRONMENT" = "beta" ]; then
-    URL_BASE_PATH="/beta/${ORG_SLUG}"
+    SERVLET_CONTEXT_PATH="/beta/${ORG_SLUG}"
     INGRESS_BASE_PATH="/beta/${ORG_SLUG}/api/isygraving/instances"
   else
-    URL_BASE_PATH="/${ORG_SLUG}"
+    SERVLET_CONTEXT_PATH="/${ORG_SLUG}"
     INGRESS_BASE_PATH="/${ORG_SLUG}/api/isygraving/instances"
   fi
 
@@ -55,7 +55,7 @@ for ENV_DIR in "$OVERLAYS_ROOT"/*/*; do
   export APP_INSTANCE="flyt-isy-graving-gateway_${ORG_UNDERSCORE}"
   export ORG_DOT
   export ORG_SLUG
-  export URL_BASE_PATH
+  export SERVLET_CONTEXT_PATH
   export INGRESS_BASE_PATH
 
   OUTPUT="${ENV_DIR}/kustomization.yaml"
