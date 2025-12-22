@@ -4,7 +4,8 @@ fint:
 logging:
   level:
     no.novari.cache.ehcache.FintEhCacheEventLogger: WARN
-    no.novari.flyt.webresourceserver: DEBUG
+    no.novari.flyt.webresourceserver: TRACE
+    org.springframework.security: DEBUG
 
 server:
   error:
