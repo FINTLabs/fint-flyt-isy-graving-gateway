@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 import java.util.UUID
 
 @Service
-class CaseMappingService : InstanceMapper<CaseInstance> {
+class CaseInstanceMappingService : InstanceMapper<CaseInstance> {
     override fun map(
         sourceApplicationId: Long,
         incomingInstance: CaseInstance,
@@ -24,7 +24,6 @@ class CaseMappingService : InstanceMapper<CaseInstance> {
                     "caseDate" to incomingInstance.caseDate,
                     "caseResponsible" to incomingInstance.caseResponsible,
                     "status" to incomingInstance.status,
-                    "date" to incomingInstance.date,
                     "callback" to incomingInstance.callback,
                 ),
         )

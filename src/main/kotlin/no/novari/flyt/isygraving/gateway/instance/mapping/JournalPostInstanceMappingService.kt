@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 import java.util.UUID
 
 @Service
-class JournalPostMappingService : InstanceMapper<JournalPostInstance> {
+class JournalPostInstanceMappingService : InstanceMapper<JournalPostInstance> {
     override fun map(
         sourceApplicationId: Long,
         incomingInstance: JournalPostInstance,
@@ -21,6 +21,15 @@ class JournalPostMappingService : InstanceMapper<JournalPostInstance> {
             valuePerKey =
                 mapOf(
                     "archiveCaseId" to incomingInstance.archiveCaseId,
+                    "tenant" to incomingInstance.tenant,
+                    "caseId" to incomingInstance.caseId,
+                    "caseArchiveGuid" to incomingInstance.caseArchiveGuid,
+                    "municipalityName" to incomingInstance.municipalityName,
+                    "caseType" to incomingInstance.caseType,
+                    "locationReference" to incomingInstance.locationReference,
+                    "caseDate" to incomingInstance.caseDate,
+                    "caseResponsible" to incomingInstance.caseResponsible,
+                    "status" to incomingInstance.status,
                     "callback" to incomingInstance.callback,
                 ),
             objectCollectionPerKey =
