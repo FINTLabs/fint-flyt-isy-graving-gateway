@@ -18,7 +18,7 @@ class JournalPostInstanceMappingServiceTest {
 
         val result =
             mappingService.map(
-                sourceApplicationId = 1L,
+                sourceApplicationId = 7L,
                 incomingInstance = instance,
             ) { _ -> UUID.randomUUID() }
 
