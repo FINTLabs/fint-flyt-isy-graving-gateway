@@ -4,6 +4,7 @@ import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
+import no.novari.flyt.gateway.webinstance.validation.constraints.ValidBase64
 
 data class JournalPostInstance(
     @field:NotBlank val archiveCaseId: String,
@@ -45,5 +46,5 @@ data class Document(
     @field:NotBlank val lastModified: String,
     @field:NotBlank val status: String,
     @field:NotBlank val mediaType: String,
-    @field:NotBlank val documentBase64: String,
+    @field:NotBlank @field:ValidBase64 val documentBase64: String,
 )
