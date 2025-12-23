@@ -1,10 +1,13 @@
 package no.novari.flyt.isygraving.gateway.instance.model
 
+import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotEmpty
+import jakarta.validation.constraints.NotNull
 
 data class JournalPostInstance(
     @field:NotBlank val archiveCaseId: String,
-    @field:NotBlank val journalEntries: List<JournalEntry>,
+    @field:NotEmpty @field:Valid val journalEntries: List<JournalEntry>,
     @field:NotBlank val tenant: String,
     @field:NotBlank val caseId: String,
     @field:NotBlank val caseArchiveGuid: String,
@@ -24,8 +27,8 @@ data class JournalEntry(
     @field:NotBlank val date: String,
     @field:NotBlank val documentType: String,
     @field:NotBlank val caseHandler: String,
-    @field:NotBlank val recipients: List<Recipient>,
-    @field:NotBlank val documents: List<Document>,
+    @field:NotEmpty @field:Valid val recipients: List<Recipient>,
+    @field:NotEmpty @field:Valid val documents: List<Document>,
 )
 
 data class Recipient(
@@ -38,7 +41,7 @@ data class Recipient(
 data class Document(
     @field:NotBlank val title: String,
     @field:NotBlank val fileName: String,
-    @field:NotBlank val mainDocument: Boolean,
+    @field:NotNull val mainDocument: Boolean,
     @field:NotBlank val lastModified: String,
     @field:NotBlank val status: String,
     @field:NotBlank val mediaType: String,
