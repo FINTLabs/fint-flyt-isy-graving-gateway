@@ -24,7 +24,7 @@ class IsyGravingInstanceController(
     private val journalPostInstanceProcessor: InstanceProcessor<JournalPostInstance>,
     private val caseStatusService: CaseStatusService,
 ) {
-    @GetMapping("/{sourceApplicationInstanceId}/status")
+    @GetMapping("{sourceApplicationInstanceId}/status")
     fun getCaseStatus(
         authentication: Authentication,
         @PathVariable sourceApplicationInstanceId: String,
