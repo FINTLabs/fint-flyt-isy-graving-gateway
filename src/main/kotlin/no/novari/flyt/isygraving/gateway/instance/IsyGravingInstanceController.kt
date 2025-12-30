@@ -2,6 +2,7 @@ package no.novari.flyt.isygraving.gateway.instance
 
 import jakarta.validation.Valid
 import no.novari.flyt.gateway.webinstance.InstanceProcessor
+import no.novari.flyt.isygraving.gateway.dispatch.CaseDispatchCache
 import no.novari.flyt.isygraving.gateway.instance.model.CaseInstance
 import no.novari.flyt.isygraving.gateway.instance.model.CaseStatus
 import no.novari.flyt.isygraving.gateway.instance.model.JournalPostInstance
@@ -23,6 +24,7 @@ class IsyGravingInstanceController(
     private val caseInstanceProcessor: InstanceProcessor<CaseInstance>,
     private val journalPostInstanceProcessor: InstanceProcessor<JournalPostInstance>,
     private val caseStatusService: CaseStatusService,
+    private val caseDispatchCache: CaseDispatchCache,
 ) {
     @GetMapping("{sourceApplicationInstanceId}/status")
     fun getCaseStatus(
@@ -41,7 +43,10 @@ class IsyGravingInstanceController(
     fun postCase(
         @Valid @RequestBody caseInstance: CaseInstance,
         authentication: Authentication,
-    ): ResponseEntity<Void> = caseInstanceProcessor.processInstance(authentication, caseInstance)
+    ): ResponseEntity<Void> =
+        caseInstanceProcessor
+            .processInstance(authentication, caseInstance)
+            .also { caseDispatchCache.put(caseInstance) }
 
     @PostMapping("journalpost")
     fun postJournalPost(
