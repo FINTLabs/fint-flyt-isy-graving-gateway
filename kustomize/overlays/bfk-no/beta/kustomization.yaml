@@ -31,6 +31,9 @@ patches:
         value:
           name: server.servlet.context-path
           value: "/beta/bfk-no"
+      - op: replace
+        path: "/spec/probes/readiness/path"
+        value: "/beta/bfk-no/actuator/health"
     target:
       kind: Application
       name: flyt-isy-graving-gateway
