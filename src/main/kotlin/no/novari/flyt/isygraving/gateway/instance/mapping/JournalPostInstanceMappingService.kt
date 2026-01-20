@@ -6,6 +6,7 @@ import no.novari.flyt.gateway.webinstance.model.instance.InstanceObject
 import no.novari.flyt.isygraving.gateway.instance.model.Document
 import no.novari.flyt.isygraving.gateway.instance.model.JournalPostInstance
 import no.novari.flyt.isygraving.gateway.instance.model.Recipient
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -18,6 +19,15 @@ class JournalPostInstanceMappingService : InstanceMapper<JournalPostInstance> {
     ): InstanceObject =
         incomingInstance.journalEntries.first().let { entry ->
             val (mainDocument, attachments) = splitDocuments(entry.documents)
+            val sourceApplicationInstanceId = incomingInstance.caseId
+            val mainDocumentFileId =
+                persistFile(
+                    toFile(
+                        sourceApplicationId = sourceApplicationId,
+                        sourceApplicationInstanceId = sourceApplicationInstanceId,
+                        document = mainDocument,
+                    ),
+                )
 
             InstanceObject(
                 valuePerKey =
@@ -43,12 +53,20 @@ class JournalPostInstanceMappingService : InstanceMapper<JournalPostInstance> {
                         "mainDocumentLastModified" to mainDocument.lastModified,
                         "mainDocumentStatus" to mainDocument.status,
                         "mainDocumentMediaType" to mainDocument.mediaType,
-                        "mainDocumentBase64" to mainDocument.documentBase64,
+                        "mainDocumentBase64" to mainDocumentFileId.toString(),
                     ),
                 objectCollectionPerKey =
                     mutableMapOf(
                         "recipients" to entry.recipients.map(::mapRecipient),
-                        "attachments" to attachments.map(::mapAttachment),
+                        "attachments" to
+                            attachments.map {
+                                mapAttachment(
+                                    document = it,
+                                    sourceApplicationId = sourceApplicationId,
+                                    sourceApplicationInstanceId = sourceApplicationInstanceId,
+                                    persistFile = persistFile,
+                                )
+                            },
                     ),
             )
         }
@@ -72,8 +90,21 @@ class JournalPostInstanceMappingService : InstanceMapper<JournalPostInstance> {
                 ),
         )
 
-    private fun mapAttachment(document: Document): InstanceObject =
-        InstanceObject(
+    private fun mapAttachment(
+        document: Document,
+        sourceApplicationId: Long,
+        sourceApplicationInstanceId: String,
+        persistFile: (File) -> UUID,
+    ): InstanceObject {
+        val fileId =
+            persistFile(
+                toFile(
+                    sourceApplicationId = sourceApplicationId,
+                    sourceApplicationInstanceId = sourceApplicationInstanceId,
+                    document = document,
+                ),
+            )
+        return InstanceObject(
             valuePerKey =
                 mapOf(
                     "title" to document.title,
@@ -81,7 +112,24 @@ class JournalPostInstanceMappingService : InstanceMapper<JournalPostInstance> {
                     "lastModified" to document.lastModified,
                     "status" to document.status,
                     "mediaType" to document.mediaType,
-                    "documentBase64" to document.documentBase64,
+                    "documentBase64" to fileId.toString(),
                 ),
         )
+    }
+
+    private fun toFile(
+        sourceApplicationId: Long,
+        sourceApplicationInstanceId: String,
+        document: Document,
+    ): File {
+        val mediaType = MediaType.parseMediaType(document.mediaType)
+        return File(
+            name = document.fileName,
+            type = mediaType,
+            sourceApplicationId = sourceApplicationId,
+            sourceApplicationInstanceId = sourceApplicationInstanceId,
+            encoding = "UTF-8",
+            base64Contents = document.documentBase64,
+        )
+    }
 }
