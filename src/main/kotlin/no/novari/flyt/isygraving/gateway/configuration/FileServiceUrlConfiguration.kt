@@ -10,6 +10,7 @@ class FileServiceUrlConfiguration(
     @Value("\${novari.flyt.file-service-url:}") private val fileServiceUrl: String,
 ) : ApplicationRunner {
     override fun run(args: org.springframework.boot.ApplicationArguments?) {
+        log.info("Env NOVARI_FLYT_FILE_SERVICE_URL={}", System.getenv("NOVARI_FLYT_FILE_SERVICE_URL") ?: "")
         log.info("Resolved novari.flyt.file-service-url={}", fileServiceUrl)
         if (fileServiceUrl.isBlank()) {
             log.error("Missing required property: novari.flyt.file-service-url")
