@@ -32,7 +32,7 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-database-postgresql")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("no.novari:flyt-web-instance-gateway:1.3.3")
+    implementation("no.novari:flyt-web-instance-gateway:1.3.4-rc-1")
     runtimeOnly("org.postgresql:postgresql")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
