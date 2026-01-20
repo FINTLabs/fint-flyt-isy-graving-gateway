@@ -46,9 +46,22 @@ for ENV_DIR in "$OVERLAYS_ROOT"/*/*; do
   if [ "$ENVIRONMENT" = "beta" ]; then
     SERVLET_CONTEXT_PATH="/beta/${ORG_SLUG}"
     INGRESS_BASE_PATH="/beta/${ORG_SLUG}/api/isygraving/instances"
+    PROBE_BASE_PATH="/beta/${ORG_SLUG}"
+    DISPATCH_BETA_PATCH=$(cat <<'PATCH'
+  - patch: |-
+      - op: replace
+        path: "/spec/itemPath"
+        value: "vaults/aks-beta-vault/items/novari-flyt-isy-graving-gateway-out"
+    target:
+      kind: OnePasswordItem
+      name: novari-flyt-isy-graving-dispatch-oauth2-client
+PATCH
+)
   else
     SERVLET_CONTEXT_PATH="/${ORG_SLUG}"
     INGRESS_BASE_PATH="/${ORG_SLUG}/api/isygraving/instances"
+    PROBE_BASE_PATH="/${ORG_SLUG}"
+    DISPATCH_BETA_PATCH=""
   fi
 
   export NAMESPACE="$ORG_SLUG"
@@ -57,6 +70,8 @@ for ENV_DIR in "$OVERLAYS_ROOT"/*/*; do
   export ORG_SLUG
   export SERVLET_CONTEXT_PATH
   export INGRESS_BASE_PATH
+  export PROBE_BASE_PATH
+  export DISPATCH_BETA_PATCH
 
   OUTPUT="${ENV_DIR}/kustomization.yaml"
   mkdir -p "$ENV_DIR"

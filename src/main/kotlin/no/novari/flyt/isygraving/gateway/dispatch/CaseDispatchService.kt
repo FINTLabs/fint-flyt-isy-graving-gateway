@@ -14,8 +14,15 @@ import org.springframework.http.MediaType
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClient
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 
 @Service
+@ConditionalOnProperty(
+    prefix = "novari.flyt.isy-graving.dispatch",
+    name = ["enabled"],
+    havingValue = "true",
+    matchIfMissing = true,
+)
 class CaseDispatchService(
     private val restClient: RestClient,
     private val dispatchContextRepository: DispatchContextRepository,

@@ -1,0 +1,6 @@
+novari:
+  flyt:
+    isy-graving:
+      dispatch:
+        api-key: ${NOVARI_FLYT_ISY_GRAVING_DISPATCH_API_KEY}
+        api-key-header: ${NOVARI_FLYT_ISY_GRAVING_DISPATCH_API_KEY_HEADER:X-API-KEY}

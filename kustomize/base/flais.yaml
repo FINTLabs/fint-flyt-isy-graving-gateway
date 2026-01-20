@@ -32,9 +32,13 @@ spec:
   env:
     - name: JAVA_TOOL_OPTIONS
       value: '-XX:+ExitOnOutOfMemoryError -Xmx700M'
+    - name: novari.flyt.isy-graving.dispatch.enabled
+      value: "false"
   envFrom:
     - secretRef:
         name: fint-flyt-file-oauth2-client
+    - secretRef:
+        name: novari-flyt-isy-graving-dispatch-oauth2-client
   resources:
     limits:
       memory: "750Mi"

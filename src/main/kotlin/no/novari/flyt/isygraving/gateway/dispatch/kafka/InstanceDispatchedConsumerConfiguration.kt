@@ -11,6 +11,7 @@ import no.novari.kafka.topic.configuration.EventTopicConfiguration
 import no.novari.kafka.topic.name.EventTopicNameParameters
 import no.novari.kafka.topic.name.TopicNamePrefixParameters
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer
@@ -18,6 +19,12 @@ import org.springframework.util.backoff.FixedBackOff
 import java.time.Duration
 
 @Configuration
+@ConditionalOnProperty(
+    prefix = "novari.flyt.isy-graving.dispatch",
+    name = ["enabled"],
+    havingValue = "true",
+    matchIfMissing = true,
+)
 class InstanceDispatchedConsumerConfiguration(
     private val eventTopicService: EventTopicService,
     private val caseDispatchService: CaseDispatchService,

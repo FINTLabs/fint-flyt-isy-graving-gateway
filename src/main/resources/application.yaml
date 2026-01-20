@@ -19,6 +19,7 @@ spring:
       - flyt-postgres
       - flyt-web-resource-server
       - flyt-file-web-client
+      - flyt-dispatch-web-client
 
   output:
     ansi:
