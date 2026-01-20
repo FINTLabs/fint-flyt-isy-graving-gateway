@@ -27,6 +27,7 @@ class InstanceDispatchedConsumerConfiguration(
         instanceFlowListenerFactoryService: InstanceFlowListenerFactoryService,
         errorHandlerFactory: ErrorHandlerFactory,
         @Value("\${novari.flyt.isy-graving.dispatch.retry-interval:10s}") retryInterval: Duration,
+        @Value("\${novari.flyt.isy-graving.dispatch.retry-attempts:3}") retryAttempts: Long,
     ): ConcurrentMessageListenerContainer<String, Any> {
         val topic =
             EventTopicNameParameters
@@ -51,25 +52,27 @@ class InstanceDispatchedConsumerConfiguration(
         )
 
         val errorHandler =
-            errorHandlerFactory.createErrorHandler(
-                ErrorHandlerConfiguration
-                    .builder<Any>()
-                    .defaultBackoff(FixedBackOff(retryInterval.toMillis(), FixedBackOff.UNLIMITED_ATTEMPTS))
-                    .build(),
-            ).apply { setAckAfterHandle(false) }
+            errorHandlerFactory
+                .createErrorHandler(
+                    ErrorHandlerConfiguration
+                        .builder<Any>()
+                        .defaultBackoff(FixedBackOff(retryInterval.toMillis(), retryAttempts))
+                        .build(),
+                ).apply { isAckAfterHandle = false }
 
-        return instanceFlowListenerFactoryService.createRecordListenerContainerFactory(
-            Any::class.java,
-            { record -> caseDispatchService.handleInstanceDispatched(record.instanceFlowHeaders) },
-            ListenerConfiguration
-                .stepBuilder()
-                .groupIdApplicationDefault()
-                .maxPollRecordsKafkaDefault()
-                .maxPollIntervalKafkaDefault()
-                .continueFromPreviousOffsetOnAssignment()
-                .build(),
-            errorHandler,
-        ).createContainer(topic)
+        return instanceFlowListenerFactoryService
+            .createRecordListenerContainerFactory(
+                Any::class.java,
+                { record -> caseDispatchService.handleInstanceDispatched(record.instanceFlowHeaders) },
+                ListenerConfiguration
+                    .stepBuilder()
+                    .groupIdApplicationDefault()
+                    .maxPollRecordsKafkaDefault()
+                    .maxPollIntervalKafkaDefault()
+                    .continueFromPreviousOffsetOnAssignment()
+                    .build(),
+                errorHandler,
+            ).createContainer(topic)
     }
 
     companion object {

@@ -17,9 +17,10 @@ class CaseStatusService(
     ): CaseStatus? {
         val sourceApplicationId = sourceApplicationAuthorizationService.getSourceApplicationId(authentication)
 
-        return archiveCaseIdRequestService.getArchiveCaseId(
-            sourceApplicationId,
-            sourceApplicationInstanceId,
-        )?.let { CaseStatus(archiveCaseId = it) }
+        return archiveCaseIdRequestService
+            .getArchiveCaseId(
+                sourceApplicationId,
+                sourceApplicationInstanceId,
+            )?.let { CaseStatus(archiveCaseId = it) }
     }
 }

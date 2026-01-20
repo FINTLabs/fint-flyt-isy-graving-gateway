@@ -24,7 +24,6 @@ class CaseInstanceMappingService : InstanceMapper<CaseInstance> {
                     "caseDate" to incomingInstance.caseDate,
                     "caseResponsible" to incomingInstance.caseResponsible,
                     "status" to incomingInstance.status,
-                    "callback" to incomingInstance.callback,
                 ),
         )
 }
