@@ -16,12 +16,17 @@ class JournalPostInstanceMappingServiceTest {
     @Test
     fun `maps journal post instance with new top-level fields`() {
         val instance = buildJournalPostInstance()
+        val fileIds = listOf(
+            UUID.fromString("b1c2c31d-6b29-4cbe-b44b-7e42b1c7a2af"),
+            UUID.fromString("7a1e57bb-1de0-4a45-8bb0-7d4aa9f75f7a"),
+        )
+        var fileIndex = 0
 
         val result =
             mappingService.map(
                 sourceApplicationId = 7L,
                 incomingInstance = instance,
-            ) { _ -> UUID.randomUUID() }
+            ) { _ -> fileIds[fileIndex++] }
 
         assertEquals(ARCHIVE_CASE_ID, result.valuePerKey["archiveCaseId"])
         assertEquals(TENANT, result.valuePerKey["tenant"])
@@ -44,7 +49,7 @@ class JournalPostInstanceMappingServiceTest {
         assertEquals(DOCUMENT_LAST_MODIFIED, result.valuePerKey["mainDocumentLastModified"])
         assertEquals(DOCUMENT_STATUS, result.valuePerKey["mainDocumentStatus"])
         assertEquals(DOCUMENT_MEDIA_TYPE, result.valuePerKey["mainDocumentMediaType"])
-        assertEquals(DOCUMENT_BASE64, result.valuePerKey["mainDocumentBase64"])
+        assertEquals(fileIds[0].toString(), result.valuePerKey["mainDocumentBase64"])
 
         val recipient = assertNotNull(result.objectCollectionPerKey["recipients"]).single()
         assertEquals(RECIPIENT_NAME, recipient.valuePerKey["name"])
@@ -58,7 +63,7 @@ class JournalPostInstanceMappingServiceTest {
         assertEquals(ATTACHMENT_LAST_MODIFIED, attachment.valuePerKey["lastModified"])
         assertEquals(ATTACHMENT_STATUS, attachment.valuePerKey["status"])
         assertEquals(ATTACHMENT_MEDIA_TYPE, attachment.valuePerKey["mediaType"])
-        assertEquals(ATTACHMENT_BASE64, attachment.valuePerKey["documentBase64"])
+        assertEquals(fileIds[1].toString(), attachment.valuePerKey["documentBase64"])
     }
 
     @Test
