@@ -6,6 +6,7 @@ import no.novari.flyt.gateway.webinstance.model.instance.InstanceObject
 import no.novari.flyt.isygraving.gateway.instance.model.Document
 import no.novari.flyt.isygraving.gateway.instance.model.JournalPostInstance
 import no.novari.flyt.isygraving.gateway.instance.model.Recipient
+import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -28,6 +29,12 @@ class JournalPostInstanceMappingService : InstanceMapper<JournalPostInstance> {
                         document = mainDocument,
                     ),
                 )
+            log.info(
+                "Uploaded main document: sourceApplicationInstanceId={}, fileName={}, fileId={}",
+                sourceApplicationInstanceId,
+                mainDocument.fileName,
+                mainDocumentFileId,
+            )
 
             InstanceObject(
                 valuePerKey =
@@ -104,6 +111,12 @@ class JournalPostInstanceMappingService : InstanceMapper<JournalPostInstance> {
                     document = document,
                 ),
             )
+        log.info(
+            "Uploaded attachment: sourceApplicationInstanceId={}, fileName={}, fileId={}",
+            sourceApplicationInstanceId,
+            document.fileName,
+            fileId,
+        )
         return InstanceObject(
             valuePerKey =
                 mapOf(
@@ -115,6 +128,10 @@ class JournalPostInstanceMappingService : InstanceMapper<JournalPostInstance> {
                     "documentBase64" to fileId.toString(),
                 ),
         )
+    }
+
+    companion object {
+        private val log = LoggerFactory.getLogger(JournalPostInstanceMappingService::class.java)
     }
 
     private fun toFile(

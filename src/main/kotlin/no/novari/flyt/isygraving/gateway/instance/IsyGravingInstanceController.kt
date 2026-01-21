@@ -7,6 +7,7 @@ import no.novari.flyt.isygraving.gateway.instance.model.CaseInstance
 import no.novari.flyt.isygraving.gateway.instance.model.CaseStatus
 import no.novari.flyt.isygraving.gateway.instance.model.JournalPostInstance
 import no.novari.flyt.webresourceserver.UrlPaths.EXTERNAL_API
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
@@ -54,6 +55,24 @@ class IsyGravingInstanceController(
         authentication: Authentication,
     ): ResponseEntity<Void> =
         journalPostInstanceProcessor
+            .also {
+                log.info(
+                    "Received journalpost: caseId={}, archiveCaseId={}, documents={}",
+                    journalPostInstance.caseId,
+                    journalPostInstance.archiveCaseId,
+                    journalPostInstance.journalEntries.firstOrNull()?.documents?.size ?: 0,
+                )
+            }
             .processInstance(authentication, journalPostInstance)
-            .also { dispatchContextService.save(journalPostInstance) }
+            .also {
+                log.info(
+                    "Journalpost processed: caseId={}",
+                    journalPostInstance.caseId,
+                )
+                dispatchContextService.save(journalPostInstance)
+            }
+
+    companion object {
+        private val log = LoggerFactory.getLogger(IsyGravingInstanceController::class.java)
+    }
 }
