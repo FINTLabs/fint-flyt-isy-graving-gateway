@@ -25,3 +25,7 @@ spring:
       schema: fintlabs_no
 server:
   port: 8107
+logging:
+  level:
+    org.springframework.security.oauth2.client: DEBUG
+    org.apache.hc.client5.http.wire: DEBUG
