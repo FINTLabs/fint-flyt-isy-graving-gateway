@@ -7,6 +7,7 @@ import no.novari.flyt.isygraving.gateway.instance.model.Recipient
 import org.junit.jupiter.api.Test
 import java.util.UUID
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 
 class JournalPostInstanceMappingServiceTest {
@@ -15,12 +16,17 @@ class JournalPostInstanceMappingServiceTest {
     @Test
     fun `maps journal post instance with new top-level fields`() {
         val instance = buildJournalPostInstance()
+        val fileIds = listOf(
+            UUID.fromString("b1c2c31d-6b29-4cbe-b44b-7e42b1c7a2af"),
+            UUID.fromString("7a1e57bb-1de0-4a45-8bb0-7d4aa9f75f7a"),
+        )
+        var fileIndex = 0
 
         val result =
             mappingService.map(
                 sourceApplicationId = 7L,
                 incomingInstance = instance,
-            ) { _ -> UUID.randomUUID() }
+            ) { _ -> fileIds[fileIndex++] }
 
         assertEquals(ARCHIVE_CASE_ID, result.valuePerKey["archiveCaseId"])
         assertEquals(TENANT, result.valuePerKey["tenant"])
@@ -32,46 +38,56 @@ class JournalPostInstanceMappingServiceTest {
         assertEquals(CASE_DATE, result.valuePerKey["caseDate"])
         assertEquals(CASE_RESPONSIBLE, result.valuePerKey["caseResponsible"])
         assertEquals(STATUS, result.valuePerKey["status"])
-        assertEquals(CALLBACK, result.valuePerKey["callback"])
+        assertEquals(ALT_MUNICIPALITY_NAME, result.valuePerKey["journalMunicipalityName"])
+        assertEquals(ALT_CASE_TYPE, result.valuePerKey["journalCaseType"])
+        assertEquals(ALT_LOCATION_REFERENCE, result.valuePerKey["journalLocationReference"])
+        assertEquals(ALT_JOURNAL_DATE, result.valuePerKey["journalDate"])
+        assertEquals(ALT_DOCUMENT_TYPE, result.valuePerKey["documentType"])
+        assertEquals(ALT_CASE_HANDLER, result.valuePerKey["caseHandler"])
+        assertEquals(DOCUMENT_TITLE, result.valuePerKey["mainDocumentTitle"])
+        assertEquals(DOCUMENT_FILE_NAME, result.valuePerKey["mainDocumentFileName"])
+        assertEquals(DOCUMENT_LAST_MODIFIED, result.valuePerKey["mainDocumentLastModified"])
+        assertEquals(DOCUMENT_STATUS, result.valuePerKey["mainDocumentStatus"])
+        assertEquals(DOCUMENT_MEDIA_TYPE, result.valuePerKey["mainDocumentMediaType"])
+        assertEquals(fileIds[0].toString(), result.valuePerKey["mainDocumentBase64"])
 
-        val journalEntries = assertNotNull(result.objectCollectionPerKey["journalEntries"])
-        assertEquals(2, journalEntries.size)
-        val firstEntry = journalEntries.first()
-        assertJournalEntryValues(
-            entry = firstEntry,
-            municipalityName = ALT_MUNICIPALITY_NAME,
-            caseType = ALT_CASE_TYPE,
-            locationReference = ALT_LOCATION_REFERENCE,
-            date = ALT_JOURNAL_DATE,
-            documentType = ALT_DOCUMENT_TYPE,
-            caseHandler = ALT_CASE_HANDLER,
-        )
-
-        val recipient = assertNotNull(firstEntry.objectCollectionPerKey["recipients"]).single()
+        val recipient = assertNotNull(result.objectCollectionPerKey["recipients"]).single()
         assertEquals(RECIPIENT_NAME, recipient.valuePerKey["name"])
         assertEquals(RECIPIENT_ADDRESS, recipient.valuePerKey["address"])
         assertEquals(RECIPIENT_POSTAL_CODE, recipient.valuePerKey["postalCode"])
         assertEquals(RECIPIENT_ORG_NUMBER, recipient.valuePerKey["organizationNumber"])
 
-        val document = assertNotNull(firstEntry.objectCollectionPerKey["documents"]).single()
-        assertEquals(DOCUMENT_TITLE, document.valuePerKey["title"])
-        assertEquals(DOCUMENT_FILE_NAME, document.valuePerKey["fileName"])
-        assertEquals(DOCUMENT_MAIN_FLAG, document.valuePerKey["mainDocument"])
-        assertEquals(DOCUMENT_LAST_MODIFIED, document.valuePerKey["lastModified"])
-        assertEquals(DOCUMENT_STATUS, document.valuePerKey["status"])
-        assertEquals(DOCUMENT_MEDIA_TYPE, document.valuePerKey["mediaType"])
-        assertEquals(DOCUMENT_BASE64, document.valuePerKey["documentBase64"])
+        val attachment = assertNotNull(result.objectCollectionPerKey["attachments"]).single()
+        assertEquals(ATTACHMENT_TITLE, attachment.valuePerKey["title"])
+        assertEquals(ATTACHMENT_FILE_NAME, attachment.valuePerKey["fileName"])
+        assertEquals(ATTACHMENT_LAST_MODIFIED, attachment.valuePerKey["lastModified"])
+        assertEquals(ATTACHMENT_STATUS, attachment.valuePerKey["status"])
+        assertEquals(ATTACHMENT_MEDIA_TYPE, attachment.valuePerKey["mediaType"])
+        assertEquals(fileIds[1].toString(), attachment.valuePerKey["documentBase64"])
+    }
 
-        val secondEntry = journalEntries.last()
-        assertJournalEntryValues(
-            entry = secondEntry,
-            municipalityName = MUNICIPALITY_NAME,
-            caseType = CASE_TYPE,
-            locationReference = LOCATION_REFERENCE,
-            date = JOURNAL_DATE,
-            documentType = DOCUMENT_TYPE,
-            caseHandler = CASE_HANDLER,
-        )
+    @Test
+    fun `throws when main document is missing`() {
+        val instance =
+            buildJournalPostInstance().copy(
+                journalEntries =
+                    listOf(
+                        buildJournalEntry().copy(
+                            documents =
+                                listOf(
+                                    buildAttachmentDocument(),
+                                    buildAttachmentDocument(),
+                                ),
+                        ),
+                    ),
+            )
+
+        assertFailsWith<MissingMainDocumentException> {
+            mappingService.map(
+                sourceApplicationId = 7L,
+                incomingInstance = instance,
+            ) { _ -> UUID.randomUUID() }
+        }
     }
 
     private fun buildJournalPostInstance(): JournalPostInstance =
@@ -80,16 +96,6 @@ class JournalPostInstanceMappingServiceTest {
             journalEntries =
                 listOf(
                     buildJournalEntry(),
-                    JournalEntry(
-                        municipalityName = MUNICIPALITY_NAME,
-                        caseType = CASE_TYPE,
-                        locationReference = LOCATION_REFERENCE,
-                        date = JOURNAL_DATE,
-                        documentType = DOCUMENT_TYPE,
-                        caseHandler = CASE_HANDLER,
-                        recipients = listOf(buildRecipient()),
-                        documents = listOf(buildDocument()),
-                    ),
                 ),
             tenant = TENANT,
             caseId = CASE_ID,
@@ -112,25 +118,8 @@ class JournalPostInstanceMappingServiceTest {
             documentType = ALT_DOCUMENT_TYPE,
             caseHandler = ALT_CASE_HANDLER,
             recipients = listOf(buildRecipient()),
-            documents = listOf(buildDocument()),
+            documents = listOf(buildMainDocument(), buildAttachmentDocument()),
         )
-
-    private fun assertJournalEntryValues(
-        entry: no.novari.flyt.gateway.webinstance.model.instance.InstanceObject,
-        municipalityName: String,
-        caseType: String,
-        locationReference: String,
-        date: String,
-        documentType: String,
-        caseHandler: String,
-    ) {
-        assertEquals(municipalityName, entry.valuePerKey["municipalityName"])
-        assertEquals(caseType, entry.valuePerKey["caseType"])
-        assertEquals(locationReference, entry.valuePerKey["locationReference"])
-        assertEquals(date, entry.valuePerKey["date"])
-        assertEquals(documentType, entry.valuePerKey["documentType"])
-        assertEquals(caseHandler, entry.valuePerKey["caseHandler"])
-    }
 
     private fun buildRecipient(): Recipient =
         Recipient(
@@ -140,7 +129,7 @@ class JournalPostInstanceMappingServiceTest {
             organizationNumber = RECIPIENT_ORG_NUMBER,
         )
 
-    private fun buildDocument(): Document =
+    private fun buildMainDocument(): Document =
         Document(
             title = DOCUMENT_TITLE,
             fileName = DOCUMENT_FILE_NAME,
@@ -149,6 +138,17 @@ class JournalPostInstanceMappingServiceTest {
             status = DOCUMENT_STATUS,
             mediaType = DOCUMENT_MEDIA_TYPE,
             documentBase64 = DOCUMENT_BASE64,
+        )
+
+    private fun buildAttachmentDocument(): Document =
+        Document(
+            title = ATTACHMENT_TITLE,
+            fileName = ATTACHMENT_FILE_NAME,
+            mainDocument = false,
+            lastModified = ATTACHMENT_LAST_MODIFIED,
+            status = ATTACHMENT_STATUS,
+            mediaType = ATTACHMENT_MEDIA_TYPE,
+            documentBase64 = ATTACHMENT_BASE64,
         )
 
     private companion object {
@@ -163,20 +163,22 @@ class JournalPostInstanceMappingServiceTest {
         const val CASE_RESPONSIBLE = "Responsible"
         const val STATUS = "OPEN"
         const val CALLBACK = "https://callback"
-        const val JOURNAL_DATE = "2024-01-02"
-        const val DOCUMENT_TYPE = "Sak"
-        const val CASE_HANDLER = "Handler"
         const val RECIPIENT_NAME = "Recipient"
         const val RECIPIENT_ADDRESS = "Street 1"
         const val RECIPIENT_POSTAL_CODE = "0123"
         const val RECIPIENT_ORG_NUMBER = "999999999"
         const val DOCUMENT_TITLE = "Doc"
         const val DOCUMENT_FILE_NAME = "doc.pdf"
-        const val DOCUMENT_MAIN_FLAG = "true"
         const val DOCUMENT_LAST_MODIFIED = "2024-01-03"
         const val DOCUMENT_STATUS = "OK"
         const val DOCUMENT_MEDIA_TYPE = "application/pdf"
         const val DOCUMENT_BASE64 = "ZmlsZQ=="
+        const val ATTACHMENT_TITLE = "Attachment"
+        const val ATTACHMENT_FILE_NAME = "attach.pdf"
+        const val ATTACHMENT_LAST_MODIFIED = "2024-01-04"
+        const val ATTACHMENT_STATUS = "OK"
+        const val ATTACHMENT_MEDIA_TYPE = "application/pdf"
+        const val ATTACHMENT_BASE64 = "ZmlsZTI="
         const val ALT_MUNICIPALITY_NAME = "Porsgrunn 2"
         const val ALT_CASE_TYPE = "Graving 2"
         const val ALT_LOCATION_REFERENCE = "Ref-1 2"

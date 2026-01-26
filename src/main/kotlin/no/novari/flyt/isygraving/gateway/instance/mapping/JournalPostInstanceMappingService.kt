@@ -4,9 +4,10 @@ import no.novari.flyt.gateway.webinstance.InstanceMapper
 import no.novari.flyt.gateway.webinstance.model.File
 import no.novari.flyt.gateway.webinstance.model.instance.InstanceObject
 import no.novari.flyt.isygraving.gateway.instance.model.Document
-import no.novari.flyt.isygraving.gateway.instance.model.JournalEntry
 import no.novari.flyt.isygraving.gateway.instance.model.JournalPostInstance
 import no.novari.flyt.isygraving.gateway.instance.model.Recipient
+import org.slf4j.LoggerFactory
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -17,44 +18,73 @@ class JournalPostInstanceMappingService : InstanceMapper<JournalPostInstance> {
         incomingInstance: JournalPostInstance,
         persistFile: (File) -> UUID,
     ): InstanceObject =
-        InstanceObject(
-            valuePerKey =
-                mapOf(
-                    "archiveCaseId" to incomingInstance.archiveCaseId,
-                    "tenant" to incomingInstance.tenant,
-                    "caseId" to incomingInstance.caseId,
-                    "caseArchiveGuid" to incomingInstance.caseArchiveGuid,
-                    "municipalityName" to incomingInstance.municipalityName,
-                    "caseType" to incomingInstance.caseType,
-                    "locationReference" to incomingInstance.locationReference,
-                    "caseDate" to incomingInstance.caseDate,
-                    "caseResponsible" to incomingInstance.caseResponsible,
-                    "status" to incomingInstance.status,
-                    "callback" to incomingInstance.callback,
-                ),
-            objectCollectionPerKey =
-                mutableMapOf(
-                    "journalEntries" to incomingInstance.journalEntries.map(::mapJournalEntry),
-                ),
-        )
+        incomingInstance.journalEntries.first().let { entry ->
+            val (mainDocument, attachments) = splitDocuments(entry.documents)
+            val sourceApplicationInstanceId = incomingInstance.caseId
+            val mainDocumentFileId =
+                persistFile(
+                    toFile(
+                        sourceApplicationId = sourceApplicationId,
+                        sourceApplicationInstanceId = sourceApplicationInstanceId,
+                        document = mainDocument,
+                    ),
+                )
+            log.info(
+                "Uploaded main document: sourceApplicationInstanceId={}, fileName={}, fileId={}",
+                sourceApplicationInstanceId,
+                mainDocument.fileName,
+                mainDocumentFileId,
+            )
 
-    private fun mapJournalEntry(entry: JournalEntry): InstanceObject =
-        InstanceObject(
-            valuePerKey =
-                mapOf(
-                    "municipalityName" to entry.municipalityName,
-                    "caseType" to entry.caseType,
-                    "locationReference" to entry.locationReference,
-                    "date" to entry.date,
-                    "documentType" to entry.documentType,
-                    "caseHandler" to entry.caseHandler,
-                ),
-            objectCollectionPerKey =
-                mutableMapOf(
-                    "recipients" to entry.recipients.map(::mapRecipient),
-                    "documents" to entry.documents.map(::mapDocument),
-                ),
-        )
+            InstanceObject(
+                valuePerKey =
+                    mapOf(
+                        "archiveCaseId" to incomingInstance.archiveCaseId,
+                        "tenant" to incomingInstance.tenant,
+                        "caseId" to incomingInstance.caseId,
+                        "caseArchiveGuid" to incomingInstance.caseArchiveGuid,
+                        "municipalityName" to incomingInstance.municipalityName,
+                        "caseType" to incomingInstance.caseType,
+                        "locationReference" to incomingInstance.locationReference,
+                        "caseDate" to incomingInstance.caseDate,
+                        "caseResponsible" to incomingInstance.caseResponsible,
+                        "status" to incomingInstance.status,
+                        "journalMunicipalityName" to entry.municipalityName,
+                        "journalCaseType" to entry.caseType,
+                        "journalLocationReference" to entry.locationReference,
+                        "journalDate" to entry.date,
+                        "documentType" to entry.documentType,
+                        "caseHandler" to entry.caseHandler,
+                        "mainDocumentTitle" to mainDocument.title,
+                        "mainDocumentFileName" to mainDocument.fileName,
+                        "mainDocumentLastModified" to mainDocument.lastModified,
+                        "mainDocumentStatus" to mainDocument.status,
+                        "mainDocumentMediaType" to mainDocument.mediaType,
+                        "mainDocumentBase64" to mainDocumentFileId.toString(),
+                    ),
+                objectCollectionPerKey =
+                    mutableMapOf(
+                        "recipients" to entry.recipients.map(::mapRecipient),
+                        "attachments" to
+                            attachments.map {
+                                mapAttachment(
+                                    document = it,
+                                    sourceApplicationId = sourceApplicationId,
+                                    sourceApplicationInstanceId = sourceApplicationInstanceId,
+                                    persistFile = persistFile,
+                                )
+                            },
+                    ),
+            )
+        }
+
+    private fun splitDocuments(documents: List<Document>): Pair<Document, List<Document>> {
+        val mainDocument =
+            documents.firstOrNull { it.mainDocument }
+                ?: throw MissingMainDocumentException("Main document is required but none of the documents are flagged as mainDocument")
+        val attachments = documents.filterNot { it.mainDocument }
+        return mainDocument to attachments
+    }
 
     private fun mapRecipient(recipient: Recipient): InstanceObject =
         InstanceObject(
@@ -67,17 +97,56 @@ class JournalPostInstanceMappingService : InstanceMapper<JournalPostInstance> {
                 ),
         )
 
-    private fun mapDocument(document: Document): InstanceObject =
-        InstanceObject(
+    private fun mapAttachment(
+        document: Document,
+        sourceApplicationId: Long,
+        sourceApplicationInstanceId: String,
+        persistFile: (File) -> UUID,
+    ): InstanceObject {
+        val fileId =
+            persistFile(
+                toFile(
+                    sourceApplicationId = sourceApplicationId,
+                    sourceApplicationInstanceId = sourceApplicationInstanceId,
+                    document = document,
+                ),
+            )
+        log.info(
+            "Uploaded attachment: sourceApplicationInstanceId={}, fileName={}, fileId={}",
+            sourceApplicationInstanceId,
+            document.fileName,
+            fileId,
+        )
+        return InstanceObject(
             valuePerKey =
                 mapOf(
                     "title" to document.title,
                     "fileName" to document.fileName,
-                    "mainDocument" to document.mainDocument.toString(),
                     "lastModified" to document.lastModified,
                     "status" to document.status,
                     "mediaType" to document.mediaType,
-                    "documentBase64" to document.documentBase64,
+                    "documentBase64" to fileId.toString(),
                 ),
         )
+    }
+
+    companion object {
+        private val log = LoggerFactory.getLogger(JournalPostInstanceMappingService::class.java)
+    }
+
+    private fun toFile(
+        sourceApplicationId: Long,
+        sourceApplicationInstanceId: String,
+        document: Document,
+    ): File {
+        val mediaType = MediaType.parseMediaType(document.mediaType)
+        return File(
+            name = document.fileName,
+            type = mediaType,
+            sourceApplicationId = sourceApplicationId,
+            sourceApplicationInstanceId = sourceApplicationInstanceId,
+            encoding = "UTF-8",
+            base64Contents = document.documentBase64,
+        )
+    }
 }

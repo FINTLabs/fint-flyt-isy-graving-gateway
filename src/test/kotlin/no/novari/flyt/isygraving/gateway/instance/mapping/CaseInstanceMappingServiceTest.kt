@@ -25,7 +25,6 @@ class CaseInstanceMappingServiceTest {
         assertEquals(CASE_DATE, result.valuePerKey["caseDate"])
         assertEquals(CASE_RESPONSIBLE, result.valuePerKey["caseResponsible"])
         assertEquals(STATUS, result.valuePerKey["status"])
-        assertEquals(CALLBACK, result.valuePerKey["callback"])
     }
 
     private fun buildCaseInstance(): CaseInstance =

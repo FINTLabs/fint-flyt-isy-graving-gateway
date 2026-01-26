@@ -11,6 +11,7 @@ import no.novari.kafka.topic.configuration.EventTopicConfiguration
 import no.novari.kafka.topic.name.EventTopicNameParameters
 import no.novari.kafka.topic.name.TopicNamePrefixParameters
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer
@@ -18,6 +19,12 @@ import org.springframework.util.backoff.FixedBackOff
 import java.time.Duration
 
 @Configuration
+@ConditionalOnProperty(
+    prefix = "novari.flyt.isy-graving.dispatch",
+    name = ["enabled"],
+    havingValue = "true",
+    matchIfMissing = true,
+)
 class InstanceDispatchedConsumerConfiguration(
     private val eventTopicService: EventTopicService,
     private val caseDispatchService: CaseDispatchService,
@@ -27,6 +34,7 @@ class InstanceDispatchedConsumerConfiguration(
         instanceFlowListenerFactoryService: InstanceFlowListenerFactoryService,
         errorHandlerFactory: ErrorHandlerFactory,
         @Value("\${novari.flyt.isy-graving.dispatch.retry-interval:10s}") retryInterval: Duration,
+        @Value("\${novari.flyt.isy-graving.dispatch.retry-attempts:3}") retryAttempts: Long,
     ): ConcurrentMessageListenerContainer<String, Any> {
         val topic =
             EventTopicNameParameters
@@ -51,25 +59,27 @@ class InstanceDispatchedConsumerConfiguration(
         )
 
         val errorHandler =
-            errorHandlerFactory.createErrorHandler(
-                ErrorHandlerConfiguration
-                    .builder<Any>()
-                    .defaultBackoff(FixedBackOff(retryInterval.toMillis(), FixedBackOff.UNLIMITED_ATTEMPTS))
-                    .build(),
-            ).apply { setAckAfterHandle(false) }
+            errorHandlerFactory
+                .createErrorHandler(
+                    ErrorHandlerConfiguration
+                        .builder<Any>()
+                        .defaultBackoff(FixedBackOff(retryInterval.toMillis(), retryAttempts))
+                        .build(),
+                ).apply { isAckAfterHandle = false }
 
-        return instanceFlowListenerFactoryService.createRecordListenerContainerFactory(
-            Any::class.java,
-            { record -> caseDispatchService.handleInstanceDispatched(record.instanceFlowHeaders) },
-            ListenerConfiguration
-                .stepBuilder()
-                .groupIdApplicationDefault()
-                .maxPollRecordsKafkaDefault()
-                .maxPollIntervalKafkaDefault()
-                .continueFromPreviousOffsetOnAssignment()
-                .build(),
-            errorHandler,
-        ).createContainer(topic)
+        return instanceFlowListenerFactoryService
+            .createRecordListenerContainerFactory(
+                Any::class.java,
+                { record -> caseDispatchService.handleInstanceDispatched(record.instanceFlowHeaders) },
+                ListenerConfiguration
+                    .stepBuilder()
+                    .groupIdApplicationDefault()
+                    .maxPollRecordsKafkaDefault()
+                    .maxPollIntervalKafkaDefault()
+                    .continueFromPreviousOffsetOnAssignment()
+                    .build(),
+                errorHandler,
+            ).createContainer(topic)
     }
 
     companion object {

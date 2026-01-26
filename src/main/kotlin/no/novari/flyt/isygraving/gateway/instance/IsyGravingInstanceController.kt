@@ -2,11 +2,12 @@ package no.novari.flyt.isygraving.gateway.instance
 
 import jakarta.validation.Valid
 import no.novari.flyt.gateway.webinstance.InstanceProcessor
-import no.novari.flyt.isygraving.gateway.dispatch.CaseDispatchCache
+import no.novari.flyt.isygraving.gateway.dispatch.DispatchContextService
 import no.novari.flyt.isygraving.gateway.instance.model.CaseInstance
 import no.novari.flyt.isygraving.gateway.instance.model.CaseStatus
 import no.novari.flyt.isygraving.gateway.instance.model.JournalPostInstance
 import no.novari.flyt.webresourceserver.UrlPaths.EXTERNAL_API
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
@@ -24,7 +25,7 @@ class IsyGravingInstanceController(
     private val caseInstanceProcessor: InstanceProcessor<CaseInstance>,
     private val journalPostInstanceProcessor: InstanceProcessor<JournalPostInstance>,
     private val caseStatusService: CaseStatusService,
-    private val caseDispatchCache: CaseDispatchCache,
+    private val dispatchContextService: DispatchContextService,
 ) {
     @GetMapping("{sourceApplicationInstanceId}/status")
     fun getCaseStatus(
@@ -46,11 +47,32 @@ class IsyGravingInstanceController(
     ): ResponseEntity<Void> =
         caseInstanceProcessor
             .processInstance(authentication, caseInstance)
-            .also { caseDispatchCache.put(caseInstance) }
+            .also { dispatchContextService.save(caseInstance) }
 
     @PostMapping("journalpost")
     fun postJournalPost(
         @Valid @RequestBody journalPostInstance: JournalPostInstance,
         authentication: Authentication,
-    ): ResponseEntity<Void> = journalPostInstanceProcessor.processInstance(authentication, journalPostInstance)
+    ): ResponseEntity<Void> =
+        journalPostInstanceProcessor
+            .also {
+                log.info(
+                    "Received journalpost: caseId={}, archiveCaseId={}, documents={}",
+                    journalPostInstance.caseId,
+                    journalPostInstance.archiveCaseId,
+                    journalPostInstance.journalEntries.firstOrNull()?.documents?.size ?: 0,
+                )
+            }
+            .processInstance(authentication, journalPostInstance)
+            .also {
+                log.info(
+                    "Journalpost processed: caseId={}",
+                    journalPostInstance.caseId,
+                )
+                dispatchContextService.save(journalPostInstance)
+            }
+
+    companion object {
+        private val log = LoggerFactory.getLogger(IsyGravingInstanceController::class.java)
+    }
 }
