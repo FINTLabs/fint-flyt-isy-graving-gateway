@@ -42,5 +42,5 @@ patches:
           value: "${SERVLET_CONTEXT_PATH}"
     target:
       kind: Application
-      name: flyt-isy-graving-gateway
+      name: fint-flyt-isy-graving-gateway
 ${DISPATCH_BETA_PATCH}
