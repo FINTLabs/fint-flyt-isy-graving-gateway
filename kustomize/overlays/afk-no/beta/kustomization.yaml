@@ -7,7 +7,7 @@ resources:
 
 labels:
   - pairs:
-      app.kubernetes.io/instance: flyt-isy-graving-gateway_afk_no
+      app.kubernetes.io/instance: fint-flyt-isy-graving-gateway_afk_no
       fintlabs.no/org-id: afk.no
 
 patches:
@@ -42,11 +42,11 @@ patches:
           value: "/beta/afk-no"
     target:
       kind: Application
-      name: flyt-isy-graving-gateway
+      name: fint-flyt-isy-graving-gateway
   - patch: |-
       - op: replace
         path: "/spec/itemPath"
-        value: "vaults/aks-beta-vault/items/novari-flyt-isy-graving-gateway-out"
+        value: "vaults/aks-beta-vault/items/novari-fint-flyt-isy-graving-gateway-out"
     target:
       kind: OnePasswordItem
       name: novari-flyt-isy-graving-dispatch-oauth2-client

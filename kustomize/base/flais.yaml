@@ -1,11 +1,11 @@
 apiVersion: fintlabs.no/v1alpha1
 kind: Application
 metadata:
-  name: flyt-isy-graving-gateway
+  name: fint-flyt-isy-graving-gateway
   namespace: fintlabs-no
   labels:
-    app.kubernetes.io/name: flyt-isy-graving-gateway
-    app.kubernetes.io/instance: flyt-isy-graving-gateway_fintlabs_no
+    app.kubernetes.io/name: fint-flyt-isy-graving-gateway
+    app.kubernetes.io/instance: fint-flyt-isy-graving-gateway_fintlabs_no
     app.kubernetes.io/version: latest
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: fint-flyt

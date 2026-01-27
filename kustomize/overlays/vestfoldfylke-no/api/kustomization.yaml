@@ -7,7 +7,7 @@ resources:
 
 labels:
   - pairs:
-      app.kubernetes.io/instance: flyt-isy-graving-gateway_vestfoldfylke_no
+      app.kubernetes.io/instance: fint-flyt-isy-graving-gateway_vestfoldfylke_no
       fintlabs.no/org-id: vestfoldfylke.no
 
 patches:
@@ -42,5 +42,5 @@ patches:
           value: "/vestfoldfylke-no"
     target:
       kind: Application
-      name: flyt-isy-graving-gateway
+      name: fint-flyt-isy-graving-gateway
 

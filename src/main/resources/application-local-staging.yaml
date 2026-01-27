@@ -18,7 +18,7 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
   datasource:
-    url: jdbc:postgresql://localhost:5442/flyt-isy-graving-gateway
+    url: jdbc:postgresql://localhost:5442/fint-flyt-isy-graving-gateway
     username: postgres
     password: password
     hikari:

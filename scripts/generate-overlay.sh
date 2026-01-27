@@ -51,7 +51,7 @@ for ENV_DIR in "$OVERLAYS_ROOT"/*/*; do
   - patch: |-
       - op: replace
         path: "/spec/itemPath"
-        value: "vaults/aks-beta-vault/items/novari-flyt-isy-graving-gateway-out"
+        value: "vaults/aks-beta-vault/items/novari-fint-flyt-isy-graving-gateway-out"
     target:
       kind: OnePasswordItem
       name: novari-flyt-isy-graving-dispatch-oauth2-client
@@ -65,7 +65,7 @@ PATCH
   fi
 
   export NAMESPACE="$ORG_SLUG"
-  export APP_INSTANCE="flyt-isy-graving-gateway_${ORG_UNDERSCORE}"
+  export APP_INSTANCE="fint-flyt-isy-graving-gateway_${ORG_UNDERSCORE}"
   export ORG_DOT
   export ORG_SLUG
   export SERVLET_CONTEXT_PATH
