@@ -24,3 +24,9 @@ spring:
   output:
     ansi:
       enabled: always
+
+springdoc:
+  swagger-ui:
+    path: ${novari.flyt.isy-graving.swagger.base-path:${novari.flyt.isy-graving.api.base-path:/api/isygraving/instances}}/swagger-ui
+  api-docs:
+    path: ${novari.flyt.isy-graving.swagger.base-path:${novari.flyt.isy-graving.api.base-path:/api/isygraving/instances}}/v3/api-docs
