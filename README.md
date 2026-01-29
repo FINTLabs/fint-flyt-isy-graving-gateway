@@ -13,7 +13,13 @@ Gateway service for ISY Graving instances in the Flyt ecosystem. It accepts case
 Base path is `EXTERNAL_API/isygraving/instances` (see `no.novari.flyt.webresourceserver.UrlPaths.EXTERNAL_API`).
 
 ### Swagger
-OpenAPI JSON is available at `/v3/api-docs`, and Swagger UI at `/swagger-ui`.
+Swagger UI and OpenAPI JSON are scoped to the ISY Graving base path:
+- Swagger UI: `/api/isygraving/instances/swagger-ui`
+- OpenAPI JSON: `/api/isygraving/instances/v3/api-docs`
+
+You can override the base path with:
+- `novari.flyt.isy-graving.swagger.base-path`
+- or `novari.flyt.isy-graving.api.base-path` (default `/api/isygraving/instances`)
 
 ### GET `/{sourceApplicationInstanceId}/status`
 Returns archive case status for a previously submitted case.
