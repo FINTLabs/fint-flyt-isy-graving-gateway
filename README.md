@@ -12,6 +12,9 @@ Gateway service for ISY Graving instances in the Flyt ecosystem. It accepts case
 ## API
 Base path is `EXTERNAL_API/isygraving/instances` (see `no.novari.flyt.webresourceserver.UrlPaths.EXTERNAL_API`).
 
+### Swagger
+OpenAPI JSON is available at `/v3/api-docs`, and Swagger UI at `/swagger-ui`.
+
 ### GET `/{sourceApplicationInstanceId}/status`
 Returns archive case status for a previously submitted case.
 
