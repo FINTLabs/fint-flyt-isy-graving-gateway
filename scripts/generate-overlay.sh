@@ -49,6 +49,15 @@ for ENV_DIR in "$OVERLAYS_ROOT"/*/*; do
     PROBE_BASE_PATH="/beta/${ORG_SLUG}"
     DISPATCH_BETA_PATCH=$(cat <<'PATCH'
   - patch: |-
+      - op: add
+        path: "/spec/env/-"
+        value:
+          name: logging.level.no.novari.flyt.isygraving.gateway.dispatch
+          value: "DEBUG"
+    target:
+      kind: Application
+      name: fint-flyt-isy-graving-gateway
+  - patch: |-
       - op: replace
         path: "/spec/itemPath"
         value: "vaults/aks-beta-vault/items/novari-fint-flyt-isy-graving-gateway-out"

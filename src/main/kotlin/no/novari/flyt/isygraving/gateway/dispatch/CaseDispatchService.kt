@@ -147,8 +147,8 @@ class CaseDispatchService(
     }
 
     private fun dispatchReceipt(receipt: DispatchReceiptEntity) {
-        log.info(
-            "Dispatching sourceApplicationInstanceId={} to callback={}",
+        log.debug(
+            "Dispatching sourceApplicationInstanceId={} via PUT to callback={}",
             receipt.sourceApplicationInstanceId,
             receipt.callbackUrl,
         )
