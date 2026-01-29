@@ -14,6 +14,8 @@ import org.springframework.http.MediaType
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClient
+import org.springframework.web.client.ResourceAccessException
+import org.springframework.web.client.RestClientResponseException
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 
 @Service
@@ -155,15 +157,45 @@ class CaseDispatchService(
 
         val payloadNode = objectMapper.readTree(receipt.payload)
 
-        restClient
-            .put()
-            .uri(receipt.callbackUrl)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(payloadNode)
-            .retrieve()
-            .toBodilessEntity()
+        try {
+            restClient
+                .put()
+                .uri(receipt.callbackUrl)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(payloadNode)
+                .retrieve()
+                .toBodilessEntity()
 
-        dispatchReceiptRepository.delete(receipt)
+            dispatchReceiptRepository.delete(receipt)
+        } catch (ex: Exception) {
+            if (isPermanentFailure(ex)) {
+                log.warn(
+                    "Permanent dispatch failure, deleting receipt id={} callbackUrl={}",
+                    receipt.id,
+                    receipt.callbackUrl,
+                    ex,
+                )
+                dispatchReceiptRepository.delete(receipt)
+                return
+            }
+            throw ex
+        }
+    }
+
+    private fun isPermanentFailure(ex: Exception): Boolean =
+        when (ex) {
+            is IllegalArgumentException -> true
+            is ResourceAccessException -> true
+            is RestClientResponseException -> isPermanentHttpStatus(ex)
+            else -> false
+        }
+
+    private fun isPermanentHttpStatus(ex: RestClientResponseException): Boolean {
+        val status = ex.statusCode
+        if (!status.is4xxClientError) {
+            return false
+        }
+        return status.value() != 408 && status.value() != 429
     }
 
     companion object {
