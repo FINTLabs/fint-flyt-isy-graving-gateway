@@ -1,6 +1,12 @@
 fint:
   application-id: fint-flyt-isy-graving-gateway
 
+novari:
+  flyt:
+    isy-graving:
+      dispatch:
+        enabled: false
+
 logging:
   level:
     no.novari.cache.ehcache.FintEhCacheEventLogger: WARN
