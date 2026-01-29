@@ -41,7 +41,7 @@ class InstanceExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
             mapOf(
-                "message" to "Ugyldig foresporsel. Mangler pakrevde felter eller ugyldige verdier.",
+                "message" to "Invalid request. Missing required fields or invalid values.",
                 "errors" to (fieldErrors + globalErrors),
             ),
         )
@@ -50,11 +50,20 @@ class InstanceExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException::class)
     fun handleJsonParseException(ex: HttpMessageNotReadableException): ResponseEntity<Map<String, String>> {
         val detail = ex.mostSpecificCause?.message?.take(500) ?: "Unable to parse JSON."
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-            mapOf(
-                "message" to "Ugyldig JSON.",
-                "detail" to detail,
-            ),
-        )
+        val hint =
+            when {
+                detail.contains("Unrecognized token 'http") || detail.contains("Unrecognized token 'https") ->
+                    "String values must be quoted, e.g. \"https://...\"."
+                else -> null
+            }
+        val body =
+            buildMap {
+                put("message", "Invalid JSON.")
+                put("detail", detail)
+                if (hint != null) {
+                    put("hint", hint)
+                }
+            }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body)
     }
 }
