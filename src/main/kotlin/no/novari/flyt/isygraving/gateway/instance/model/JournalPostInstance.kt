@@ -3,7 +3,6 @@ package no.novari.flyt.isygraving.gateway.instance.model
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotEmpty
-import jakarta.validation.constraints.NotNull
 import no.novari.flyt.gateway.webinstance.validation.constraints.ValidBase64
 
 data class JournalPostInstance(
@@ -28,7 +27,7 @@ data class JournalEntry(
     @field:NotBlank val date: String,
     @field:NotBlank val documentType: String,
     @field:NotBlank val caseHandler: String,
-    @field:NotEmpty @field:Valid val recipients: List<Recipient>,
+    @field:Valid val recipients: List<Recipient>,
     @field:NotEmpty @field:Valid val documents: List<Document>,
 )
 
@@ -42,7 +41,7 @@ data class Recipient(
 data class Document(
     @field:NotBlank val title: String,
     @field:NotBlank val fileName: String,
-    @field:NotNull val mainDocument: Boolean,
+    val mainDocument: Boolean,
     @field:NotBlank val lastModified: String,
     @field:NotBlank val status: String,
     @field:NotBlank val mediaType: String,
