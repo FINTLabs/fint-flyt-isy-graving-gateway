@@ -28,7 +28,7 @@ data class JournalEntry(
     @field:NotBlank val date: String,
     @field:NotBlank val documentType: String,
     @field:NotBlank val caseHandler: String,
-    @field:NotEmpty @field:Valid val recipients: List<Recipient>,
+    @field:NotNull @field:Valid val recipients: List<Recipient>,
     @field:NotEmpty @field:Valid val documents: List<Document>,
 )
 
