@@ -16,10 +16,11 @@ class JournalPostInstanceMappingServiceTest {
     @Test
     fun `maps journal post instance with new top-level fields`() {
         val instance = buildJournalPostInstance()
-        val fileIds = listOf(
-            UUID.fromString("b1c2c31d-6b29-4cbe-b44b-7e42b1c7a2af"),
-            UUID.fromString("7a1e57bb-1de0-4a45-8bb0-7d4aa9f75f7a"),
-        )
+        val fileIds =
+            listOf(
+                UUID.fromString("b1c2c31d-6b29-4cbe-b44b-7e42b1c7a2af"),
+                UUID.fromString("7a1e57bb-1de0-4a45-8bb0-7d4aa9f75f7a"),
+            )
         var fileIndex = 0
 
         val result =

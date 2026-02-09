@@ -60,10 +60,12 @@ class IsyGravingInstanceController(
                     "Received journalpost: caseId={}, archiveCaseId={}, documents={}",
                     journalPostInstance.caseId,
                     journalPostInstance.archiveCaseId,
-                    journalPostInstance.journalEntries.firstOrNull()?.documents?.size ?: 0,
+                    journalPostInstance.journalEntries
+                        .firstOrNull()
+                        ?.documents
+                        ?.size ?: 0,
                 )
-            }
-            .processInstance(authentication, journalPostInstance)
+            }.processInstance(authentication, journalPostInstance)
             .also {
                 log.info(
                     "Journalpost processed: caseId={}",

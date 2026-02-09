@@ -14,9 +14,10 @@ class SwaggerSecurityConfig(
     private val environment: Environment,
 ) {
     private fun swaggerBasePath(): String {
-        val configured = environment.getProperty("novari.flyt.isy-graving.swagger.base-path")
-            ?: environment.getProperty("novari.flyt.isy-graving.api.base-path")
-            ?: "/api/isygraving/instances"
+        val configured =
+            environment.getProperty("novari.flyt.isy-graving.swagger.base-path")
+                ?: environment.getProperty("novari.flyt.isy-graving.api.base-path")
+                ?: "/api/isygraving/instances"
 
         return if (configured.startsWith("/")) configured else "/$configured"
     }

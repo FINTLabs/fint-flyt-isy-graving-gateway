@@ -6,10 +6,11 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @OpenAPIDefinition(
-    info = Info(
-        title = "ISY Graving Gateway API",
-        description = "External API for submitting ISY Graving cases and journal posts.",
-        version = "v1",
-    ),
+    info =
+        Info(
+            title = "ISY Graving Gateway API",
+            description = "External API for submitting ISY Graving cases and journal posts.",
+            version = "v1",
+        ),
 )
 class OpenApiConfig
