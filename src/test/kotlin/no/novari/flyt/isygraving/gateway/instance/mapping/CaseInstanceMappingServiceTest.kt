@@ -18,6 +18,8 @@ class CaseInstanceMappingServiceTest {
                 incomingInstance = instance,
             ) { _ -> UUID.randomUUID() }
 
+        assertEquals(CASE_ID, result.valuePerKey["caseId"])
+        assertEquals(CASE_ARCHIVE_GUID, result.valuePerKey["caseArchiveGuid"])
         assertEquals(TENANT, result.valuePerKey["tenant"])
         assertEquals(MUNICIPALITY_NAME, result.valuePerKey["municipalityName"])
         assertEquals(CASE_TYPE, result.valuePerKey["caseType"])
