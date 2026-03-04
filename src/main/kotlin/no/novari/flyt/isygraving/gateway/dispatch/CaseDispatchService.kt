@@ -10,13 +10,13 @@ import no.novari.flyt.isygraving.gateway.dispatch.repository.DispatchContextRepo
 import no.novari.flyt.isygraving.gateway.dispatch.repository.DispatchReceiptRepository
 import no.novari.flyt.kafka.instanceflow.headers.InstanceFlowHeaders
 import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.http.MediaType
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestClient
 import org.springframework.web.client.ResourceAccessException
+import org.springframework.web.client.RestClient
 import org.springframework.web.client.RestClientResponseException
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 
 @Service
 @ConditionalOnProperty(
@@ -34,7 +34,9 @@ class CaseDispatchService(
 ) {
     fun handleInstanceDispatched(instanceFlowHeaders: InstanceFlowHeaders) {
         val sourceApplicationIntegrationId = instanceFlowHeaders.sourceApplicationIntegrationId
-        if (sourceApplicationIntegrationId != INTEGRATION_CASE && sourceApplicationIntegrationId != INTEGRATION_JOURNALPOST) {
+        if (sourceApplicationIntegrationId != INTEGRATION_CASE &&
+            sourceApplicationIntegrationId != INTEGRATION_JOURNALPOST
+        ) {
             log.debug(
                 "Skipping instance-dispatched for sourceApplicationIntegrationId={}",
                 sourceApplicationIntegrationId,
@@ -59,21 +61,27 @@ class CaseDispatchService(
 
         val payload =
             when (sourceApplicationIntegrationId) {
-                INTEGRATION_CASE ->
+                INTEGRATION_CASE -> {
                     buildCasePayload(
                         instanceFlowHeaders,
                         dispatchContext.caseId,
                         dispatchContext.caseArchiveGuid,
                         dispatchContext.tenant,
                     )
-                INTEGRATION_JOURNALPOST ->
+                }
+
+                INTEGRATION_JOURNALPOST -> {
                     buildJournalPostPayload(
                         instanceFlowHeaders,
                         dispatchContext.caseId,
                         dispatchContext.caseArchiveGuid,
                         dispatchContext.tenant,
                     )
-                else -> error("Unsupported sourceApplicationIntegrationId=$sourceApplicationIntegrationId")
+                }
+
+                else -> {
+                    error("Unsupported sourceApplicationIntegrationId=$sourceApplicationIntegrationId")
+                }
             }
 
         val receipt =

@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.validation.FieldError
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import org.springframework.web.bind.MethodArgumentNotValidException
 
 @RestControllerAdvice
 class InstanceExceptionHandler {
@@ -49,12 +49,16 @@ class InstanceExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException::class)
     fun handleJsonParseException(ex: HttpMessageNotReadableException): ResponseEntity<Map<String, String>> {
-        val detail = ex.mostSpecificCause?.message?.take(500) ?: "Unable to parse JSON."
+        val detail = ex.mostSpecificCause.message?.take(500) ?: "Unable to parse JSON."
         val hint =
             when {
-                detail.contains("Unrecognized token 'http") || detail.contains("Unrecognized token 'https") ->
+                detail.contains("Unrecognized token 'http") || detail.contains("Unrecognized token 'https") -> {
                     "String values must be quoted, e.g. \"https://...\"."
-                else -> null
+                }
+
+                else -> {
+                    null
+                }
             }
         val body =
             buildMap {

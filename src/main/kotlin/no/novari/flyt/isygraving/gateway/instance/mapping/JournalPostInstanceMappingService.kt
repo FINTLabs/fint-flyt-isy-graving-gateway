@@ -86,7 +86,9 @@ class JournalPostInstanceMappingService : InstanceMapper<JournalPostInstance> {
     private fun splitDocuments(documents: List<Document>): Pair<Document, List<Document>> {
         val mainDocument =
             documents.firstOrNull { it.mainDocument }
-                ?: throw MissingMainDocumentException("Main document is required but none of the documents are flagged as mainDocument")
+                ?: throw MissingMainDocumentException(
+                    "Main document is required but none of the documents are flagged as mainDocument",
+                )
         val attachments = documents.filterNot { it.mainDocument }
         return mainDocument to attachments
     }
