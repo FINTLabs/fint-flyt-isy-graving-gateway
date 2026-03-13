@@ -3,15 +3,17 @@ package no.novari.flyt.isygraving.gateway.instance.model
 import jakarta.validation.constraints.NotBlank
 
 data class CaseInstance(
-    @field:NotBlank val caseId: String,
-    @field:NotBlank val caseArchiveGuid: String,
     @field:NotBlank val tenant: String,
-    @field:NotBlank val municipalityName: String,
+    @field:NotBlank val caseId: String,
     @field:NotBlank val caseType: String,
     @field:NotBlank val businessArea: String,
     @field:NotBlank val businessAreaType: String,
+    @field:NotBlank val caseArchiveGuid: String,
+    @field:NotBlank val municipalityName: String,
     @field:NotBlank val locationReference: String,
+    @field:NotBlank val locationReferenceFull: String,
     @field:NotBlank val locationReferenceFormatted: String,
+    @field:NotBlank val streetName: String,
     @field:NotBlank val caseDate: String,
     @field:NotBlank val caseYear: String,
     @field:NotBlank val caseResponsible: String,

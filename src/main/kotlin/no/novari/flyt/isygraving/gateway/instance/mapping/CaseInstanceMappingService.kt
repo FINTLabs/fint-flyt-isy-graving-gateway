@@ -17,15 +17,17 @@ class CaseInstanceMappingService : InstanceMapper<CaseInstance> {
         InstanceObject(
             valuePerKey =
                 mapOf(
-                    "caseId" to incomingInstance.caseId,
-                    "caseArchiveGuid" to incomingInstance.caseArchiveGuid,
                     "tenant" to incomingInstance.tenant,
-                    "municipalityName" to incomingInstance.municipalityName,
+                    "caseId" to incomingInstance.caseId,
                     "caseType" to incomingInstance.caseType,
                     "businessArea" to incomingInstance.businessArea,
                     "businessAreaType" to incomingInstance.businessAreaType,
+                    "caseArchiveGuid" to incomingInstance.caseArchiveGuid,
+                    "municipalityName" to incomingInstance.municipalityName,
                     "locationReference" to incomingInstance.locationReference,
+                    "locationReferenceFull" to incomingInstance.locationReferenceFull,
                     "locationReferenceFormatted" to incomingInstance.locationReferenceFormatted,
+                    "streetName" to incomingInstance.streetName,
                     "caseDate" to incomingInstance.caseDate,
                     "caseYear" to incomingInstance.caseYear,
                     "caseResponsible" to incomingInstance.caseResponsible,
