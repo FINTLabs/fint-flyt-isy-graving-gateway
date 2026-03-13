@@ -5,7 +5,7 @@ import no.novari.flyt.isygraving.gateway.instance.model.JournalEntry
 import no.novari.flyt.isygraving.gateway.instance.model.JournalPostInstance
 import no.novari.flyt.isygraving.gateway.instance.model.Recipient
 import org.junit.jupiter.api.Test
-import java.util.*
+import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
