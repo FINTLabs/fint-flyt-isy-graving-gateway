@@ -91,7 +91,7 @@ class JournalPostInstanceMappingService : InstanceMapper<JournalPostInstance> {
                     "documentType" to journalEntry.documentType,
                     "mainDocumentTitle" to mainDocument.title,
                     "mainDocumentFileName" to mainDocument.fileName,
-                    "mainDocumentTags" to mainDocument.tags.joinToString(","),
+                    "mainDocumentTags" to mainDocument.tags.orEmpty().joinToString(","),
                     "mainDocumentLastModified" to mainDocument.lastModified,
                     "mainDocumentStatus" to mainDocument.status,
                     "mainDocumentMediaType" to mainDocument.mediaType,
@@ -149,7 +149,7 @@ class JournalPostInstanceMappingService : InstanceMapper<JournalPostInstance> {
                 mapOf(
                     "title" to document.title,
                     "fileName" to document.fileName,
-                    "tags" to document.tags.joinToString(","),
+                    "tags" to document.tags.orEmpty().joinToString(","),
                     "lastModified" to document.lastModified,
                     "status" to document.status,
                     "mediaType" to document.mediaType,
