@@ -19,15 +19,17 @@ class CaseInstanceMappingServiceTest {
                 incomingInstance = instance,
             ) { _ -> UUID.randomUUID() }
 
-        assertEquals(CASE_ID, result.valuePerKey["caseId"])
-        assertEquals(CASE_ARCHIVE_GUID, result.valuePerKey["caseArchiveGuid"])
         assertEquals(TENANT, result.valuePerKey["tenant"])
-        assertEquals(MUNICIPALITY_NAME, result.valuePerKey["municipalityName"])
+        assertEquals(CASE_ID, result.valuePerKey["caseId"])
         assertEquals(CASE_TYPE, result.valuePerKey["caseType"])
         assertEquals(BUSINESS_AREA, result.valuePerKey["businessArea"])
         assertEquals(BUSINESS_AREA_TYPE, result.valuePerKey["businessAreaType"])
+        assertEquals(CASE_ARCHIVE_GUID, result.valuePerKey["caseArchiveGuid"])
+        assertEquals(MUNICIPALITY_NAME, result.valuePerKey["municipalityName"])
         assertEquals(LOCATION_REFERENCE, result.valuePerKey["locationReference"])
+        assertEquals(LOCATION_REFERENCE_FULL, result.valuePerKey["locationReferenceFull"])
         assertEquals(LOCATION_REFERENCE_FORMATTED, result.valuePerKey["locationReferenceFormatted"])
+        assertEquals(STREET_NAME, result.valuePerKey["streetName"])
         assertEquals(CASE_DATE, result.valuePerKey["caseDate"])
         assertEquals(CASE_YEAR, result.valuePerKey["caseYear"])
         assertEquals(CASE_RESPONSIBLE, result.valuePerKey["caseResponsible"])
@@ -38,15 +40,17 @@ class CaseInstanceMappingServiceTest {
 
     private fun buildCaseInstance(): CaseInstance =
         CaseInstance(
-            caseId = CASE_ID,
-            caseArchiveGuid = CASE_ARCHIVE_GUID,
             tenant = TENANT,
-            municipalityName = MUNICIPALITY_NAME,
+            caseId = CASE_ID,
             caseType = CASE_TYPE,
             businessArea = BUSINESS_AREA,
             businessAreaType = BUSINESS_AREA_TYPE,
+            caseArchiveGuid = CASE_ARCHIVE_GUID,
+            municipalityName = MUNICIPALITY_NAME,
             locationReference = LOCATION_REFERENCE,
+            locationReferenceFull = LOCATION_REFERENCE_FULL,
             locationReferenceFormatted = LOCATION_REFERENCE_FORMATTED,
+            streetName = STREET_NAME,
             caseDate = CASE_DATE,
             caseYear = CASE_YEAR,
             caseResponsible = CASE_RESPONSIBLE,
@@ -56,20 +60,22 @@ class CaseInstanceMappingServiceTest {
         )
 
     private companion object {
-        const val CASE_ID = "case-1"
-        const val CASE_ARCHIVE_GUID = "guid-123"
-        const val TENANT = "tenant-a"
-        const val MUNICIPALITY_NAME = "Porsgrunn"
-        const val CASE_TYPE = "Graving"
-        const val BUSINESS_AREA = "Road"
-        const val BUSINESS_AREA_TYPE = "Maintenance"
-        const val LOCATION_REFERENCE = "Ref-1"
-        const val LOCATION_REFERENCE_FORMATTED = "Ref-1 formatted"
-        const val CASE_DATE = "2024-01-01"
-        const val CASE_YEAR = "2024"
-        const val CASE_RESPONSIBLE = "Responsible"
-        const val STATUS = "OPEN"
-        const val STATUS_NAME = "Open"
-        const val CALLBACK = "https://callback"
+        const val TENANT = "more_romsdal"
+        const val CASE_ID = "GT_20260227_1715"
+        const val CASE_TYPE = "Gravetillatelse"
+        const val BUSINESS_AREA = "Gravetillatelse"
+        const val BUSINESS_AREA_TYPE = "Graving i veibanen "
+        const val CASE_ARCHIVE_GUID = "d1aa088b-f3a7-438f-bf4f-be6cc74ac5d6"
+        const val MUNICIPALITY_NAME = "Birkenes"
+        const val LOCATION_REFERENCE = "FV3750"
+        const val LOCATION_REFERENCE_FULL = "FV3750 S1D1 m4435 "
+        const val LOCATION_REFERENCE_FORMATTED = "Fv.3750"
+        const val STREET_NAME = "Urdalsveien"
+        const val CASE_DATE = "2026-03-13"
+        const val CASE_YEAR = "2026"
+        const val CASE_RESPONSIBLE = "admin@isycase.isy.se"
+        const val STATUS = "status.beviljat"
+        const val STATUS_NAME = "Innvilget"
+        const val CALLBACK = "https://localhost:5001/Case/Public/SetArchiveCaseReference"
     }
 }

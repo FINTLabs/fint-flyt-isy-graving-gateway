@@ -18,70 +18,41 @@ class JournalPostInstanceMappingService : InstanceMapper<JournalPostInstance> {
         incomingInstance: JournalPostInstance,
         persistFile: (File) -> UUID,
     ): InstanceObject =
-        incomingInstance.journalEntries.first().let { entry ->
-            val (mainDocument, attachments) = splitDocuments(entry.documents)
-            val sourceApplicationInstanceId = incomingInstance.caseId
-            val mainDocumentFileId =
-                persistFile(
-                    toFile(
-                        sourceApplicationId = sourceApplicationId,
-                        sourceApplicationInstanceId = sourceApplicationInstanceId,
-                        document = mainDocument,
-                    ),
-                )
-            log.info(
-                "Uploaded main document: sourceApplicationInstanceId={}, fileName={}, fileId={}",
-                sourceApplicationInstanceId,
-                mainDocument.fileName,
-                mainDocumentFileId,
-            )
-
-            InstanceObject(
-                valuePerKey =
-                    mapOf(
-                        "archiveCaseId" to incomingInstance.archiveCaseId,
-                        "tenant" to incomingInstance.tenant,
-                        "caseId" to incomingInstance.caseId,
-                        "caseArchiveGuid" to incomingInstance.caseArchiveGuid,
-                        "municipalityName" to incomingInstance.municipalityName,
-                        "caseType" to incomingInstance.caseType,
-                        "businessArea" to incomingInstance.businessArea,
-                        "businessAreaType" to incomingInstance.businessAreaType,
-                        "locationReference" to incomingInstance.locationReference,
-                        "locationReferenceFormatted" to incomingInstance.locationReferenceFormatted,
-                        "caseDate" to incomingInstance.caseDate,
-                        "caseYear" to incomingInstance.caseYear,
-                        "caseResponsible" to incomingInstance.caseResponsible,
-                        "status" to incomingInstance.status,
-                        "statusName" to incomingInstance.statusName,
-                        "journalMunicipalityName" to entry.municipalityName,
-                        "journalCaseType" to entry.caseType,
-                        "journalLocationReference" to entry.locationReference,
-                        "journalDate" to entry.date,
-                        "documentType" to entry.documentType,
-                        "caseHandler" to entry.caseHandler,
-                        "mainDocumentTitle" to mainDocument.title,
-                        "mainDocumentFileName" to mainDocument.fileName,
-                        "mainDocumentLastModified" to mainDocument.lastModified,
-                        "mainDocumentStatus" to mainDocument.status,
-                        "mainDocumentMediaType" to mainDocument.mediaType,
-                        "mainDocumentBase64" to mainDocumentFileId.toString(),
-                    ),
-                objectCollectionPerKey =
-                    mutableMapOf(
-                        "recipients" to entry.recipients.map(::mapRecipient),
-                        "attachments" to
-                            attachments.map {
-                                mapAttachment(
-                                    document = it,
-                                    sourceApplicationId = sourceApplicationId,
-                                    sourceApplicationInstanceId = sourceApplicationInstanceId,
-                                    persistFile = persistFile,
-                                )
-                            },
-                    ),
-            )
-        }
+        InstanceObject(
+            valuePerKey =
+                mapOf(
+                    "tenant" to incomingInstance.tenant,
+                    "caseId" to incomingInstance.caseId,
+                    "caseType" to incomingInstance.caseType,
+                    "businessArea" to incomingInstance.businessArea,
+                    "businessAreaType" to incomingInstance.businessAreaType,
+                    "caseArchiveGuid" to incomingInstance.caseArchiveGuid,
+                    "municipalityName" to incomingInstance.municipalityName,
+                    "locationReference" to incomingInstance.locationReference,
+                    "locationReferenceFull" to incomingInstance.locationReferenceFull,
+                    "locationReferenceFormatted" to incomingInstance.locationReferenceFormatted,
+                    "streetName" to incomingInstance.streetName,
+                    "caseDate" to incomingInstance.caseDate,
+                    "caseYear" to incomingInstance.caseYear,
+                    "caseResponsible" to incomingInstance.caseResponsible,
+                    "status" to incomingInstance.status,
+                    "statusName" to incomingInstance.statusName,
+                    "archiveCaseId" to incomingInstance.archiveCaseId,
+                ),
+            objectCollectionPerKey =
+                mutableMapOf(
+                    "recipients" to incomingInstance.recipients.map(::mapRecipient),
+                    "journalEntries" to
+                        incomingInstance.journalEntries.map { entry ->
+                            mapJournalEntry(
+                                journalEntry = entry,
+                                sourceApplicationId = sourceApplicationId,
+                                sourceApplicationInstanceId = incomingInstance.caseId,
+                                persistFile = persistFile,
+                            )
+                        },
+                ),
+        )
 
     private fun splitDocuments(documents: List<Document>): Pair<Document, List<Document>> {
         val mainDocument =
@@ -93,6 +64,54 @@ class JournalPostInstanceMappingService : InstanceMapper<JournalPostInstance> {
         return mainDocument to attachments
     }
 
+    private fun mapJournalEntry(
+        journalEntry: no.novari.flyt.isygraving.gateway.instance.model.JournalEntry,
+        sourceApplicationId: Long,
+        sourceApplicationInstanceId: String,
+        persistFile: (File) -> UUID,
+    ): InstanceObject {
+        val (mainDocument, attachments) = splitDocuments(journalEntry.documents)
+        val mainDocumentFileId =
+            persistFile(
+                toFile(
+                    sourceApplicationId = sourceApplicationId,
+                    sourceApplicationInstanceId = sourceApplicationInstanceId,
+                    document = mainDocument,
+                ),
+            )
+        log.info(
+            "Uploaded main document: sourceApplicationInstanceId={}, fileName={}, fileId={}",
+            sourceApplicationInstanceId,
+            mainDocument.fileName,
+            mainDocumentFileId,
+        )
+        return InstanceObject(
+            valuePerKey =
+                mapOf(
+                    "documentType" to journalEntry.documentType,
+                    "mainDocumentTitle" to mainDocument.title,
+                    "mainDocumentFileName" to mainDocument.fileName,
+                    "mainDocumentTags" to mainDocument.tags.joinToString(","),
+                    "mainDocumentLastModified" to mainDocument.lastModified,
+                    "mainDocumentStatus" to mainDocument.status,
+                    "mainDocumentMediaType" to mainDocument.mediaType,
+                    "mainDocumentBase64" to mainDocumentFileId.toString(),
+                ),
+            objectCollectionPerKey =
+                mutableMapOf(
+                    "attachments" to
+                        attachments.map {
+                            mapAttachment(
+                                document = it,
+                                sourceApplicationId = sourceApplicationId,
+                                sourceApplicationInstanceId = sourceApplicationInstanceId,
+                                persistFile = persistFile,
+                            )
+                        },
+                ),
+        )
+    }
+
     private fun mapRecipient(recipient: Recipient): InstanceObject =
         InstanceObject(
             valuePerKey =
@@ -100,6 +119,7 @@ class JournalPostInstanceMappingService : InstanceMapper<JournalPostInstance> {
                     "name" to recipient.name,
                     "address" to recipient.address,
                     "postalCode" to recipient.postalCode,
+                    "city" to recipient.city,
                     "organizationNumber" to recipient.organizationNumber,
                 ),
         )
@@ -129,6 +149,7 @@ class JournalPostInstanceMappingService : InstanceMapper<JournalPostInstance> {
                 mapOf(
                     "title" to document.title,
                     "fileName" to document.fileName,
+                    "tags" to document.tags.joinToString(","),
                     "lastModified" to document.lastModified,
                     "status" to document.status,
                     "mediaType" to document.mediaType,
