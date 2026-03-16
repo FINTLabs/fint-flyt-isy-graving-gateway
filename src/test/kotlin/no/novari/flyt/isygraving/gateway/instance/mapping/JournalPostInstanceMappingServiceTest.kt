@@ -134,6 +134,39 @@ class JournalPostInstanceMappingServiceTest {
         }
     }
 
+    @Test
+    fun `maps missing tags to empty strings`() {
+        val instance =
+            buildJournalPostInstance().copy(
+                journalEntries =
+                    listOf(
+                        buildJournalEntry().copy(
+                            documents =
+                                listOf(
+                                    buildMainDocument().copy(tags = null),
+                                    buildAttachmentDocument().copy(tags = null),
+                                ),
+                        ),
+                    ),
+            )
+
+        val result =
+            mappingService.map(
+                sourceApplicationId = 7L,
+                incomingInstance = instance,
+            ) { _ -> UUID.randomUUID() }
+
+        val journalEntry =
+            result.objectCollectionPerKey["journalEntries"]?.toList()?.single()
+                ?: error("Missing journalEntries")
+        assertEquals("", journalEntry.valuePerKey["mainDocumentTags"])
+
+        val attachment =
+            journalEntry.objectCollectionPerKey["attachments"]?.toList()?.single()
+                ?: error("Missing attachments")
+        assertEquals("", attachment.valuePerKey["tags"])
+    }
+
     private fun buildJournalPostInstance(): JournalPostInstance =
         JournalPostInstance(
             tenant = TENANT,

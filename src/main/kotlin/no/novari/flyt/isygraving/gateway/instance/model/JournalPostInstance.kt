@@ -44,7 +44,7 @@ data class Recipient(
 data class Document(
     @field:NotBlank val title: String,
     @field:NotBlank val fileName: String,
-    @field:NotEmpty val tags: List<String>,
+    val tags: List<String>? = null,
     val mainDocument: Boolean,
     @field:NotBlank val lastModified: String,
     @field:NotBlank val status: String,
