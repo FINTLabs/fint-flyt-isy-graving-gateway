@@ -43,4 +43,10 @@ patches:
     target:
       kind: Application
       name: fint-flyt-isy-graving-gateway
-
+  - patch: |-
+      - op: replace
+        path: "/spec/itemPath"
+        value: "vaults/aks-api-vault/items/novari-fint-flyt-isy-graving-gateway-out-mrfylke-no"
+    target:
+      kind: OnePasswordItem
+      name: novari-flyt-isy-graving-dispatch-oauth2-client

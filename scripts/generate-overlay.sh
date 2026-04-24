@@ -5,12 +5,15 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 OVERLAYS_ROOT="${REPO_ROOT}/kustomize/overlays"
-TEMPLATE="${REPO_ROOT}/scripts/templates/overlay-template.yaml"
+API_TEMPLATE="${REPO_ROOT}/scripts/templates/overlay-api-template.yaml.tmpl"
+BETA_TEMPLATE="${REPO_ROOT}/scripts/templates/overlay-beta-template.yaml.tmpl"
 
-if [ ! -f "$TEMPLATE" ]; then
-  echo "Template not found at $TEMPLATE" >&2
-  exit 1
-fi
+for TEMPLATE in "$API_TEMPLATE" "$BETA_TEMPLATE"; do
+  if [ ! -f "$TEMPLATE" ]; then
+    echo "Template not found at $TEMPLATE" >&2
+    exit 1
+  fi
+done
 
 render() {
   local template_path="$1"
@@ -44,33 +47,15 @@ for ENV_DIR in "$OVERLAYS_ROOT"/*/*; do
   ORG_UNDERSCORE=${ORG_SLUG//-/_}
 
   if [ "$ENVIRONMENT" = "beta" ]; then
+    TEMPLATE="$BETA_TEMPLATE"
     SERVLET_CONTEXT_PATH="/beta/${ORG_SLUG}"
     INGRESS_BASE_PATH="/beta/${ORG_SLUG}/api/isygraving/instances"
     PROBE_BASE_PATH="/beta/${ORG_SLUG}"
-    DISPATCH_BETA_PATCH=$(cat <<'PATCH'
-  - patch: |-
-      - op: add
-        path: "/spec/env/-"
-        value:
-          name: logging.level.no.novari.flyt.isygraving.gateway.dispatch
-          value: "DEBUG"
-    target:
-      kind: Application
-      name: fint-flyt-isy-graving-gateway
-  - patch: |-
-      - op: replace
-        path: "/spec/itemPath"
-        value: "vaults/aks-beta-vault/items/novari-fint-flyt-isy-graving-gateway-out"
-    target:
-      kind: OnePasswordItem
-      name: novari-flyt-isy-graving-dispatch-oauth2-client
-PATCH
-)
   else
+    TEMPLATE="$API_TEMPLATE"
     SERVLET_CONTEXT_PATH="/${ORG_SLUG}"
     INGRESS_BASE_PATH="/${ORG_SLUG}/api/isygraving/instances"
     PROBE_BASE_PATH="/${ORG_SLUG}"
-    DISPATCH_BETA_PATCH=""
   fi
 
   export NAMESPACE="$ORG_SLUG"
@@ -80,8 +65,6 @@ PATCH
   export SERVLET_CONTEXT_PATH
   export INGRESS_BASE_PATH
   export PROBE_BASE_PATH
-  export DISPATCH_BETA_PATCH
-
   OUTPUT="${ENV_DIR}/kustomization.yaml"
   mkdir -p "$ENV_DIR"
   render "$TEMPLATE" "$OUTPUT"
