@@ -55,7 +55,7 @@ patches:
   - patch: |-
       - op: replace
         path: "/spec/itemPath"
-        value: "vaults/aks-beta-vault/items/novari-fint-flyt-isy-graving-gateway-out"
+        value: "vaults/aks-beta-vault/items/novari-fint-flyt-isy-graving-gateway-out-bfk-no"
     target:
       kind: OnePasswordItem
       name: novari-flyt-isy-graving-dispatch-oauth2-client
