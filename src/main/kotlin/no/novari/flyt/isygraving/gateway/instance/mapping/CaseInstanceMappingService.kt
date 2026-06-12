@@ -18,6 +18,7 @@ class CaseInstanceMappingService : InstanceMapper<CaseInstance> {
             valuePerKey =
                 mapOf(
                     "tenant" to incomingInstance.tenant,
+                    "id" to incomingInstance.id,
                     "caseId" to incomingInstance.caseId,
                     "caseType" to incomingInstance.caseType,
                     "businessArea" to incomingInstance.businessArea,

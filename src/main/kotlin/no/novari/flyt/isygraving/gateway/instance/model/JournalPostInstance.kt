@@ -7,6 +7,7 @@ import no.novari.flyt.gateway.webinstance.validation.constraints.ValidBase64
 
 data class JournalPostInstance(
     @field:NotBlank val tenant: String,
+    @field:NotBlank val id: String,
     @field:NotBlank val caseId: String,
     @field:NotBlank val caseType: String,
     @field:NotBlank val businessArea: String,

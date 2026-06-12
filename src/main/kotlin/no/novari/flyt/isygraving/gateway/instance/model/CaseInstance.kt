@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank
 
 data class CaseInstance(
     @field:NotBlank val tenant: String,
+    @field:NotBlank val id: String,
     @field:NotBlank val caseId: String,
     @field:NotBlank val caseType: String,
     @field:NotBlank val businessArea: String,

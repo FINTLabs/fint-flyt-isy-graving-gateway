@@ -33,6 +33,7 @@ class JournalPostInstanceMappingServiceTest {
 
         assertEquals(ARCHIVE_CASE_ID, result.valuePerKey["archiveCaseId"])
         assertEquals(TENANT, result.valuePerKey["tenant"])
+        assertEquals(ID, result.valuePerKey["id"])
         assertEquals(CASE_ID, result.valuePerKey["caseId"])
         assertEquals(CASE_TYPE, result.valuePerKey["caseType"])
         assertEquals(BUSINESS_AREA, result.valuePerKey["businessArea"])
@@ -170,6 +171,7 @@ class JournalPostInstanceMappingServiceTest {
     private fun buildJournalPostInstance(): JournalPostInstance =
         JournalPostInstance(
             tenant = TENANT,
+            id = ID,
             caseId = CASE_ID,
             caseType = CASE_TYPE,
             businessArea = BUSINESS_AREA,
@@ -269,6 +271,7 @@ class JournalPostInstanceMappingServiceTest {
 
     private companion object {
         const val TENANT = "more_romsdal"
+        const val ID = "1715"
         const val CASE_ID = "GT_20260227_1715"
         const val CASE_TYPE = "Gravetillatelse"
         const val BUSINESS_AREA = "Gravetillatelse"
