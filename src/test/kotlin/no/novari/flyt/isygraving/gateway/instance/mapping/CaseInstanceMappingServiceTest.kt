@@ -20,6 +20,7 @@ class CaseInstanceMappingServiceTest {
             ) { _ -> UUID.randomUUID() }
 
         assertEquals(TENANT, result.valuePerKey["tenant"])
+        assertEquals(ID, result.valuePerKey["id"])
         assertEquals(CASE_ID, result.valuePerKey["caseId"])
         assertEquals(CASE_TYPE, result.valuePerKey["caseType"])
         assertEquals(BUSINESS_AREA, result.valuePerKey["businessArea"])
@@ -41,6 +42,7 @@ class CaseInstanceMappingServiceTest {
     private fun buildCaseInstance(): CaseInstance =
         CaseInstance(
             tenant = TENANT,
+            id = ID,
             caseId = CASE_ID,
             caseType = CASE_TYPE,
             businessArea = BUSINESS_AREA,
@@ -61,6 +63,7 @@ class CaseInstanceMappingServiceTest {
 
     private companion object {
         const val TENANT = "more_romsdal"
+        const val ID = "1715"
         const val CASE_ID = "GT_20260227_1715"
         const val CASE_TYPE = "Gravetillatelse"
         const val BUSINESS_AREA = "Gravetillatelse"
