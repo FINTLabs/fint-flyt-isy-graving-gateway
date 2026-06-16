@@ -4,6 +4,8 @@ fint:
 novari:
   flyt:
     isy-graving:
+      json:
+        max-string-length: 100000000
       dispatch:
         enabled: true
 
