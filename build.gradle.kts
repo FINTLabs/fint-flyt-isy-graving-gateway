@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm") version "2.4.0"
     kotlin("plugin.spring") version "2.4.0"
     kotlin("plugin.jpa") version "2.4.0"
-    id("org.springframework.boot") version "3.5.15"
+    id("org.springframework.boot") version "3.5.16"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
     id("com.github.ben-manes.versions") version "0.54.0"
@@ -40,7 +40,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    implementation("no.novari:flyt-web-instance-gateway:2.1.0")
+    implementation("no.novari:flyt-web-instance-gateway:2.3.0")
 
     // Springdoc 3.x targets Spring Boot 4.x; keep 2.x for Boot 3.5.x compatibility.
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.17")
