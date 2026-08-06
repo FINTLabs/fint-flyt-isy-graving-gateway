@@ -40,7 +40,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    implementation("no.novari:flyt-web-instance-gateway:3.0.0-rc-3")
+    implementation("no.novari:flyt-web-instance-gateway:3.0.0")
     implementation("no.novari:flyt-cache:3.0.0")
 
     // Springdoc 3.x targets Spring Boot 4.x; keep 2.x for Boot 3.5.x compatibility.
