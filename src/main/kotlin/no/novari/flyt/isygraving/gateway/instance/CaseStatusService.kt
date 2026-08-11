@@ -1,6 +1,6 @@
 package no.novari.flyt.isygraving.gateway.instance
 
-import no.novari.flyt.gateway.webinstance.kafka.ArchiveCaseIdRequestService
+import no.novari.flyt.gateway.instance.kafka.ArchiveCaseIdRequestService
 import no.novari.flyt.isygraving.gateway.instance.model.CaseStatus
 import no.novari.flyt.webresourceserver.security.client.sourceapplication.SourceApplicationAuthorizationService
 import org.springframework.security.core.Authentication

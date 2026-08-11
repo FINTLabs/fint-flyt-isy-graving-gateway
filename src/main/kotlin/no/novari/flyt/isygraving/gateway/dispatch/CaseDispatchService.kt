@@ -1,7 +1,7 @@
 package no.novari.flyt.isygraving.gateway.dispatch
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.novari.flyt.gateway.webinstance.kafka.ArchiveCaseIdRequestService
+import no.novari.flyt.gateway.instance.kafka.ArchiveCaseIdRequestService
 import no.novari.flyt.isygraving.gateway.dispatch.DispatchContextService.Companion.INTEGRATION_CASE
 import no.novari.flyt.isygraving.gateway.dispatch.DispatchContextService.Companion.INTEGRATION_JOURNALPOST
 import no.novari.flyt.isygraving.gateway.dispatch.DispatchContextService.Companion.buildDispatchKey

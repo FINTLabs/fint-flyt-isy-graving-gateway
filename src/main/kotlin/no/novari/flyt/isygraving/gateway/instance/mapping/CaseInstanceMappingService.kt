@@ -1,8 +1,8 @@
 package no.novari.flyt.isygraving.gateway.instance.mapping
 
-import no.novari.flyt.gateway.webinstance.InstanceMapper
-import no.novari.flyt.gateway.webinstance.model.File
-import no.novari.flyt.gateway.webinstance.model.instance.InstanceObject
+import no.novari.flyt.gateway.instance.InstanceMapper
+import no.novari.flyt.gateway.instance.model.File
+import no.novari.flyt.gateway.instance.model.instance.InstanceObject
 import no.novari.flyt.isygraving.gateway.instance.model.CaseInstance
 import org.springframework.stereotype.Service
 import java.util.UUID

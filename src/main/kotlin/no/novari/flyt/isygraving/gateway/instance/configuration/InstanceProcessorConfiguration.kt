@@ -1,7 +1,7 @@
 package no.novari.flyt.isygraving.gateway.instance.configuration
 
-import no.novari.flyt.gateway.webinstance.InstanceProcessor
-import no.novari.flyt.gateway.webinstance.InstanceProcessorFactoryService
+import no.novari.flyt.gateway.instance.InstanceProcessor
+import no.novari.flyt.gateway.instance.InstanceProcessorFactoryService
 import no.novari.flyt.isygraving.gateway.instance.mapping.CaseInstanceMappingService
 import no.novari.flyt.isygraving.gateway.instance.mapping.JournalPostInstanceMappingService
 import no.novari.flyt.isygraving.gateway.instance.model.CaseInstance
