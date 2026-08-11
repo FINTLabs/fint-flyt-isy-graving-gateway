@@ -1,7 +1,7 @@
 package no.novari.flyt.isygraving.gateway.instance
 
 import jakarta.validation.Valid
-import no.novari.flyt.gateway.webinstance.InstanceProcessor
+import no.novari.flyt.gateway.instance.InstanceProcessor
 import no.novari.flyt.isygraving.gateway.dispatch.DispatchContextService
 import no.novari.flyt.isygraving.gateway.instance.model.CaseInstance
 import no.novari.flyt.isygraving.gateway.instance.model.CaseStatus
