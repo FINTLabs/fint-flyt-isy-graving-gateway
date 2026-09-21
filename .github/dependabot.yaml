@@ -4,7 +4,7 @@ updates:
       directory: "/"
       schedule:
           interval: weekly
-          day: wednesday
+          day: monday
           time: "04:30"
           timezone: "Europe/Oslo"
       open-pull-requests-limit: 10
@@ -38,11 +38,14 @@ updates:
           - dependency-name: "org.springframework*"
             update-types:
                 - "version-update:semver-major"
+          - dependency-name: "org.springdoc:springdoc-openapi-starter-webmvc-ui"
+            update-types:
+                - "version-update:semver-major"
     - package-ecosystem: docker
       directory: "/"
       schedule:
           interval: weekly
-          day: wednesday
+          day: monday
           time: "04:30"
           timezone: "Europe/Oslo"
       open-pull-requests-limit: 5
@@ -50,7 +53,7 @@ updates:
       directory: "/"
       schedule:
           interval: weekly
-          day: wednesday
+          day: monday
           time: "04:30"
           timezone: "Europe/Oslo"
       groups:
