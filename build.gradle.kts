@@ -5,20 +5,20 @@ buildscript {
         gradlePluginPortal()
     }
     dependencies {
-        classpath(platform("com.fasterxml.jackson:jackson-bom:2.22.2"))
+        classpath(platform("com.fasterxml.jackson:jackson-bom:2.22.3"))
         constraints {
             classpath("org.apache.httpcomponents.client5:httpclient5:5.6.4")
-            classpath("org.apache.httpcomponents.core5:httpcore5:5.4.3")
-            classpath("org.apache.httpcomponents.core5:httpcore5-h2:5.4.3")
+            classpath("org.apache.httpcomponents.core5:httpcore5:5.4.4")
+            classpath("org.apache.httpcomponents.core5:httpcore5-h2:5.4.4")
             classpath("org.apache.commons:commons-lang3:3.20.0")
         }
     }
 }
 
 plugins {
-    kotlin("jvm") version "2.4.10"
-    kotlin("plugin.spring") version "2.4.10"
-    kotlin("plugin.jpa") version "2.4.10"
+    kotlin("jvm") version "2.4.20"
+    kotlin("plugin.spring") version "2.4.20"
+    kotlin("plugin.jpa") version "2.4.20"
     id("org.springframework.boot") version "3.5.16"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
@@ -28,7 +28,7 @@ plugins {
 group = "no.novari"
 version = "0.0.1-SNAPSHOT"
 
-var springdocOpenApiVersion = "2.8.17"
+var springdocOpenApiVersion = "2.9.1"
 
 java {
     toolchain {
@@ -44,8 +44,8 @@ repositories {
 
 extra["commons-lang3.version"] = "3.20.0"
 extra["httpclient5.version"] = "5.6.3"
-extra["httpcore5.version"] = "5.4.3"
-extra["jackson-bom.version"] = "2.22.2"
+extra["httpcore5.version"] = "5.4.4"
+extra["jackson-bom.version"] = "2.22.3"
 extra["log4j2.version"] = "2.26.1"
 extra["postgresql.version"] = "42.7.12"
 extra["tomcat.version"] = "10.1.59"
