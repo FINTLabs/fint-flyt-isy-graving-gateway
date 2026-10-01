@@ -70,6 +70,7 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("io.github.oshai:kotlin-logging-jvm:8.0.4")
 
     implementation("no.novari:flyt-gateway-starter:4.1.0")
     implementation("no.novari:flyt-cache:3.0.0")
