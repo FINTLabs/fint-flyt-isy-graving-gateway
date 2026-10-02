@@ -78,7 +78,8 @@ dependencies {
     // Springdoc 3.x targets Spring Boot 4.x; keep 2.x for Boot 3.5.x compatibility.
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocOpenApiVersion")
 
-    runtimeOnly("net.logstash.logback:logstash-logback-encoder:9.0")
+    // Pinned to 8.x: 9.x pulls in Jackson 3 (tools.jackson), while Spring Boot 3.5 uses Jackson 2
+    runtimeOnly("net.logstash.logback:logstash-logback-encoder:8.1")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
