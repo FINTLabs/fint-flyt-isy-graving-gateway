@@ -139,7 +139,7 @@ Common environment variables:
    ```bash
    docker compose up -d
    ```
-   Add `--profile tools` to also start Kafdrop on http://localhost:19000. `docker compose down -v` stops everything and wipes the data.
+   Add `--profile tools` to also start Kafdrop on http://localhost:19000. Kafka topics and the database are empty on every start.
 2. Run the app with the local profile:
    ```bash
    ./gradlew bootRun --args='--spring.profiles.active=local-staging'
