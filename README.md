@@ -135,10 +135,11 @@ Common environment variables:
 - `novari.flyt.isy-graving.dispatch.enabled` (defaults to `true`, disabled in `local-staging`)
 
 ## Local development
-1. Start Postgres:
+1. Start Postgres (localhost:5442) and Kafka (localhost:9092):
    ```bash
-   ./start-postgres
+   docker compose up -d
    ```
+   Add `--profile tools` to also start Kafdrop on http://localhost:19000. Kafka topics and the database are empty on every start.
 2. Run the app with the local profile:
    ```bash
    ./gradlew bootRun --args='--spring.profiles.active=local-staging'
