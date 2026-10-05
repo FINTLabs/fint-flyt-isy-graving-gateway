@@ -1,3 +1,0 @@
-#!/bin/bash
-
-docker run --rm --name fint-flyt-isy-graving-gateway-postgres -p 5442:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_DB=fint-flyt-isy-graving-gateway -d postgres
