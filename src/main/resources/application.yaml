@@ -25,6 +25,7 @@ spring:
       - flyt-postgres
       - flyt-web-resource-server
       - flyt-file-web-client
+      - flyt-authorization-client
       - flyt-dispatch-web-client
 
   output:

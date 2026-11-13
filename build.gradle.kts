@@ -85,7 +85,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("io.github.oshai:kotlin-logging-jvm:8.0.4")
 
-    implementation("no.novari:flyt-gateway-starter:4.3.0")
+    implementation("no.novari:flyt-gateway-starter:5.0.0-rc-2")
     implementation("no.novari:flyt-cache:3.0.1")
 
     // Springdoc 3.x targets Spring Boot 4.x; keep 2.x for Boot 3.5.x compatibility.
