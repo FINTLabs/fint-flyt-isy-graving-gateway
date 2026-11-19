@@ -124,12 +124,15 @@ Key configuration is in `src/main/resources`:
 - `application-flyt-web-resource-server.yaml`: external API security, authorized source application IDs.
 - `application-flyt-dispatch-web-client.yaml`: dispatch API key header/value.
 - `application-flyt-file-web-client.yaml`: OAuth client for file service.
+- `application-flyt-authorization-client.yaml`: registrations for intgr-conf-service, history-service and
+  authorization-service with the shared `fint-flyt-authorization-oauth2-client`.
 - `application-flyt-postgres.yaml`: datasource and Flyway.
 - `application-local-staging.yaml`: local developer defaults (ports, Kafka, Postgres).
 
 Common environment variables:
 - `fint.database.url`, `fint.database.username`, `fint.database.password`
 - `fint.sso.client-id`, `fint.sso.client-secret`
+- `fint.flyt.authorization.sso.client-id`, `fint.flyt.authorization.sso.client-secret`
 - `NOVARI_FLYT_ISY_GRAVING_DISPATCH_API_KEY`
 - `NOVARI_FLYT_ISY_GRAVING_DISPATCH_API_KEY_HEADER` (defaults to `X-API-KEY`)
 - `novari.flyt.isy-graving.dispatch.enabled` (defaults to `true`, disabled in `local-staging`)

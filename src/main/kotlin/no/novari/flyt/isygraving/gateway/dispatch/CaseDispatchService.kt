@@ -2,7 +2,7 @@ package no.novari.flyt.isygraving.gateway.dispatch
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.oshai.kotlinlogging.KotlinLogging
-import no.novari.flyt.gateway.instance.kafka.ArchiveCaseIdRequestService
+import no.novari.flyt.gateway.instance.HistoryClient
 import no.novari.flyt.isygraving.gateway.dispatch.DispatchContextService.Companion.INTEGRATION_CASE
 import no.novari.flyt.isygraving.gateway.dispatch.DispatchContextService.Companion.INTEGRATION_JOURNALPOST
 import no.novari.flyt.isygraving.gateway.dispatch.DispatchContextService.Companion.buildDispatchKey
@@ -29,7 +29,7 @@ class CaseDispatchService(
     private val restClient: RestClient,
     private val dispatchContextRepository: DispatchContextRepository,
     private val dispatchReceiptRepository: DispatchReceiptRepository,
-    private val archiveCaseIdRequestService: ArchiveCaseIdRequestService,
+    private val historyClient: HistoryClient,
     private val objectMapper: ObjectMapper,
 ) {
     fun handleInstanceDispatched(instanceFlowHeaders: InstanceFlowHeaders) {
@@ -134,7 +134,7 @@ class CaseDispatchService(
         val sourceApplicationId = instanceFlowHeaders.sourceApplicationId
         val archiveCaseId =
             instanceFlowHeaders.archiveInstanceId
-                ?: archiveCaseIdRequestService.getArchiveCaseId(sourceApplicationId, caseId)
+                ?: historyClient.getArchiveInstanceId(sourceApplicationId, caseId)
                 ?: error("Missing archiveCaseId for caseId=$caseId")
 
         return CaseDispatchPayload(
